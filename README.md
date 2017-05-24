@@ -1,6 +1,9 @@
 MeBop!
-___
+----
 Jukebox, DJ, & Karaoke App
+___
 
 
-MeBop! is music the way I like it. Search for and and add songs to build your music library.
+__MeBop__: music the way I like it. Search for and and add songs to build your music library.
+_____
+[This link is live.](http://mebop.surge.sh)
