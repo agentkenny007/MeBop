@@ -1,2 +1,27 @@
 .App { text-align: center; }
 audio { width: 0; height: 0; visibility: hidden; }
+html, body {
+  width: 100%; height: 100%; overflow: auto;
+}
+body {
+  background: url(images/background.png) center/cover no-repeat;
+}
+.monolith {
+  width: 634px; height: 151px; background: url(images/mebop.png) no-repeat;
+  margin: 3% auto 0;
+}
+.audio-player {
+  .prev, .play, .next {
+    display: inline-block;
+  }
+  .prev, .next {
+    margin: 0 200px;
+    position: relative; top: 40px;
+  }
+  .prev { margin-right: 220px; }
+  svg { cursor: pointer; }
+}
+.icon {
+  width: 221px; height: 267px; background: url(images/logo.png) no-repeat; margin: auto;
+  position: absolute; bottom: 15%; left: 50%; margin-left: -110px;
+}
