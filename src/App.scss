@@ -43,7 +43,7 @@ body {
   &.playing {
     .pause { display: inline-block; }
     .play { display: none; }
-    .prev, .next { top: 0; margin: 50px; }
+    .prev, .next { top: -27px; margin: 50px; }
     &.major {
       top: 38.2%;
     }

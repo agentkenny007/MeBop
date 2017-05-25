@@ -52,7 +52,7 @@ body {
   .audio-player.playing .play {
     display: none; }
   .audio-player.playing .prev, .audio-player.playing .next {
-    top: 0;
+    top: -27px;
     margin: 50px; }
   .audio-player.playing.major {
     top: 38.2%; }
