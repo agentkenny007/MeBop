@@ -11,6 +11,7 @@ body {
   margin: 3% auto 0;
 }
 .audio-player {
+  .pause { display: none; }
   .prev, .play, .next {
     display: inline-block;
   }
@@ -19,7 +20,17 @@ body {
     position: relative; top: 40px;
   }
   .prev { margin-right: 220px; }
-  svg { cursor: pointer; }
+  svg {
+    cursor: pointer;
+    transition: all 0.725s ease;
+    &:hover {
+      transform: scale(1.25);
+    }
+  }
+  &.playing {
+    .pause { display: inline-block; }
+    .play { display: none; }
+  }
 }
 .icon {
   width: 221px; height: 267px; background: url(images/logo.png) no-repeat; margin: auto;

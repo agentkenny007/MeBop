@@ -20,6 +20,9 @@ body {
   background: url(images/mebop.png) no-repeat;
   margin: 3% auto 0; }
 
+.audio-player .pause {
+  display: none; }
+
 .audio-player .prev, .audio-player .play, .audio-player .next {
   display: inline-block; }
 
@@ -32,7 +35,16 @@ body {
   margin-right: 220px; }
 
 .audio-player svg {
-  cursor: pointer; }
+  cursor: pointer;
+  transition: all 0.725s ease; }
+  .audio-player svg:hover {
+    transform: scale(1.25); }
+
+.audio-player.playing .pause {
+  display: inline-block; }
+
+.audio-player.playing .play {
+  display: none; }
 
 .icon {
   width: 221px;
