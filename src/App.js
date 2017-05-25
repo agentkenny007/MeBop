@@ -2,9 +2,20 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 import './App.css';
 
+let AudioPlayer = {
+  play: () => {
+    $('.audio-player').addClass('playing');
+    $('.monolith').addClass('hidden');
+  },
+  pause: () => {
+    $('.audio-player').removeClass('playing');
+    $('.monolith').removeClass('hidden');
+  }
+}
+
 $(document)
-  .on('click', '.audio-player .play', ()=>{ $('.audio-player').addClass('playing'); })
-  .on('click', '.audio-player .pause', ()=>{ $('.audio-player').removeClass('playing'); })
+  .on('click', '.audio-player .play', AudioPlayer.play)
+  .on('click', '.audio-player .pause', AudioPlayer.pause)
   .on('submit', 'form', ()=>{ return false; });
 
 class App extends Component {
@@ -16,7 +27,7 @@ class App extends Component {
         <div className="container">
           <div className="monolith"></div>
           <div className="major audio-player">
-            <div className="prev">
+            <div className="prev control">
               <svg width="73px" height="81px" viewBox="0 0 73 81" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                 <defs>
                     <path d="M51,43.8333333 L5.96946407,71.3519942 C2.6726201,73.3667322 0,71.8620903 0,67.9968325 L0,5.00316749 C0,1.13542488 2.66679179,-0.370293903 5.96946407,1.64800582 L51,29.1666667 L51,9.00348663 C51,6.79242202 52.7965212,5 54.9958262,5 L59.0041738,5 C61.2110077,5 63,6.79537646 63,9.00348663 L63,64.9965134 C63,67.207578 61.2034788,69 59.0041738,69 L54.9958262,69 C52.7889923,69 51,67.2046235 51,64.9965134 L51,43.8333333 Z" id="prev-track"></path>
@@ -40,7 +51,7 @@ class App extends Component {
                 </g>
               </svg>
             </div>
-            <div className="play">
+            <div className="play control">
               <svg width="122px" height="144px" viewBox="0 0 122 144" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                 <defs>
                     <path d="M744.186338,266.205022 C751.263128,270.51007 751.262665,277.490212 744.186338,281.794978 L649.813662,339.205022 C642.736872,343.51007 637,340.27508 637,331.993513 L637,216.006487 C637,207.718633 642.737335,204.490212 649.813662,208.794978 L744.186338,266.205022 Z" id="play-triangle-large"></path>
@@ -62,7 +73,7 @@ class App extends Component {
                 </g>
               </svg>
             </div>
-            <div className="pause">
+            <div className="pause control">
               <svg width="122px" height="144px" viewBox="0 0 95 144" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                 <defs>
                     <path d="M641,214.491553 C641,210.354082 644.366293,207 648.5,207 L648.5,207 C652.642136,207 656,210.362584 656,214.491553 L656,333.508447 C656,337.645918 652.633707,341 648.5,341 L648.5,341 C644.357864,341 641,337.637416 641,333.508447 L641,214.491553 Z M711,214.491553 C711,210.354082 714.366293,207 718.5,207 L718.5,207 C722.642136,207 726,210.362584 726,214.491553 L726,333.508447 C726,337.645918 722.633707,341 718.5,341 L718.5,341 C714.357864,341 711,337.637416 711,333.508447 L711,214.491553 Z" id="path-1"></path>
@@ -84,7 +95,7 @@ class App extends Component {
                 </g>
               </svg>
             </div>
-            <div className="next">
+            <div className="next control">
               <svg width="73px" height="81px" viewBox="0 0 73 81" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                 <defs>
                     <path d="M563,43.8333333 L517.969464,71.3519942 C514.67262,73.3667322 512,71.8620903 512,67.9968325 L512,5.00316749 C512,1.13542488 514.666792,-0.370293903 517.969464,1.64800582 L563,29.1666667 L563,9.00348663 C563,6.79242202 564.796521,5 566.995826,5 L571.004174,5 C573.211008,5 575,6.79537646 575,9.00348663 L575,64.9965134 C575,67.207578 573.203479,69 571.004174,69 L566.995826,69 C564.788992,69 563,67.2046235 563,64.9965134 L563,43.8333333 Z" id="next-track"></path>

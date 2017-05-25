@@ -7,19 +7,27 @@ body {
   background: url(images/background.png) center/cover no-repeat;
 }
 .monolith {
+  transition: all 0.375s ease;
   width: 634px; height: 151px; background: url(images/mebop.png) no-repeat;
   margin: 3% auto 0;
+  &.hidden {
+    margin-top: -10%;
+  }
 }
 .audio-player {
+  transition: all 0.967s ease;
+  .control {
+    transition: all 0.967s ease;
+  }
   .pause { display: none; }
   .prev, .play, .next {
     display: inline-block;
   }
   .prev, .next {
-    margin: 0 200px;
     position: relative; top: 40px;
   }
   .prev { margin-right: 220px; }
+  .next { margin-left: 200px; }
   svg {
     cursor: pointer;
     transition: all 0.725s ease;
@@ -27,12 +35,21 @@ body {
       transform: scale(1.25);
     }
   }
+  &.major {
+    position: absolute;
+    width: 100%;
+    top: 25%;
+  }
   &.playing {
     .pause { display: inline-block; }
     .play { display: none; }
+    .prev, .next { top: 0; margin: 50px; }
+    &.major {
+      top: 38.2%;
+    }
   }
 }
 .icon {
   width: 221px; height: 267px; background: url(images/logo.png) no-repeat; margin: auto;
-  position: absolute; bottom: 15%; left: 50%; margin-left: -110px;
+  position: absolute; bottom: 15%; left: 50%; margin-left: -110px; z-index: -1;
 }
