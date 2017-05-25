@@ -3,22 +3,25 @@ import ID from './cred';
 let
 
 AudioPlayer = function(){
+  let audio = $('audio')[0];  
   this.nowPlaying = 0;
   this.songList = [];
 
+  audio.addEventListener('ended', ()=>{ player.skip() });
+
   this.play = song => {
-    let audio = $('audio'), songFound = !!(song = song || this.songList[0]);
+    let songFound = !!(song = song || this.songList[0]);
     if (songFound){ // ensure there is a song to be played
-      if (!audio[0].src.includes(song.stream)) // if no paused song
-        audio.attr("src", `${song.stream}?client_id=${ID}`);
-      audio[0].play();
+      if (!audio.src.includes(song.stream)) // if song is not paused
+        audio.src = `${song.stream}?client_id=${ID}`; // set a new song
+      audio.play(); // play or unpause song
     }
     $('.audio-player').addClass('playing');
     $('.monolith').addClass('hidden');
   };
 
   this.pause = () => {
-    $('audio')[0].pause();
+    audio.pause();
     $('.audio-player').removeClass('playing');
     $('.monolith').removeClass('hidden');
   };
