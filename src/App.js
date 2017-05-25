@@ -3,20 +3,18 @@ import React, { Component } from 'react';
 import './App.css';
 
 import findSongs from './modules/soundcloud';
-import ID from './modules/cred';
 import { AudioPlayer, List } from './modules/backbone'
 
-let songList, nowPlaying = 0,
+let player = new AudioPlayer(),
 run = () => {
-  findSongs().then(songs => {
-    songList = List(songs);
-    console.log(songList);
-  });
+  findSongs().then(songs => player.songList = List(songs));
 };
 
 $(document)
-  .on('click', '.audio-player .play', ()=>{ AudioPlayer.play(songList[nowPlaying]) })
-  .on('click', '.audio-player .pause', AudioPlayer.pause)
+  .on('click', '.audio-player .play', ()=>{ player.play() })
+  .on('click', '.audio-player .pause', player.pause)
+  .on('click', '.audio-player .next', player.skip)
+  .on('click', '.audio-player .prev', player.recur)
   .on('submit', 'form', ()=>{ return false; })
   .ready(run);
 
