@@ -31,7 +31,7 @@ AudioPlayer = function(){
 
   this.recur = () => {
     this.nowPlaying--; // decrement now playing index designates previous song
-    if (this.nowPlaying <= 0) this.nowPlaying = this.songList.length - 1; // start over if list ends
+    if (this.nowPlaying < 0) this.nowPlaying = this.songList.length - 1; // go to end of list if at beginning
     this.play(this.songList[this.nowPlaying]); // play previous song
   };
 },
