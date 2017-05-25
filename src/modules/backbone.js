@@ -1,13 +1,18 @@
 import $ from 'jquery';
-
+import ID from './cred';
 let
 
 AudioPlayer = {
-  play: () => {
+  play: song => {
+    let audio = $('audio');
+    if (!audio[0].src.includes(song.stream))
+      audio.attr("src", `${song.stream}?client_id=${ID}`);
+    audio[0].play();
     $('.audio-player').addClass('playing');
     $('.monolith').addClass('hidden');
   },
   pause: () => {
+    $('audio')[0].pause();
     $('.audio-player').removeClass('playing');
     $('.monolith').removeClass('hidden');
   }

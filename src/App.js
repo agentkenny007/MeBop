@@ -6,7 +6,7 @@ import findSongs from './modules/soundcloud';
 import ID from './modules/cred';
 import { AudioPlayer, List } from './modules/backbone'
 
-let songList,
+let songList, nowPlaying = 0,
 run = () => {
   findSongs().then(songs => {
     songList = List(songs);
@@ -15,7 +15,7 @@ run = () => {
 };
 
 $(document)
-  .on('click', '.audio-player .play', AudioPlayer.play)
+  .on('click', '.audio-player .play', ()=>{ AudioPlayer.play(songList[nowPlaying]) })
   .on('click', '.audio-player .pause', AudioPlayer.pause)
   .on('submit', 'form', ()=>{ return false; })
   .ready(run);
