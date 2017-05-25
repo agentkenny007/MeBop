@@ -2,21 +2,23 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 import './App.css';
 
-let AudioPlayer = {
-  play: () => {
-    $('.audio-player').addClass('playing');
-    $('.monolith').addClass('hidden');
-  },
-  pause: () => {
-    $('.audio-player').removeClass('playing');
-    $('.monolith').removeClass('hidden');
-  }
-}
+import findSongs from './modules/soundcloud';
+import ID from './modules/cred';
+import { AudioPlayer, List } from './modules/backbone'
+
+let songList,
+run = () => {
+  findSongs().then(songs => {
+    songList = List(songs);
+    console.log(songList);
+  });
+};
 
 $(document)
   .on('click', '.audio-player .play', AudioPlayer.play)
   .on('click', '.audio-player .pause', AudioPlayer.pause)
-  .on('submit', 'form', ()=>{ return false; });
+  .on('submit', 'form', ()=>{ return false; })
+  .ready(run);
 
 class App extends Component {
   componentDidMount() {}
