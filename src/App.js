@@ -5,21 +5,22 @@ import './App.css';
 import findSongs from './modules/soundcloud';
 import { AudioPlayer, List } from './modules/backbone'
 
-let player = new AudioPlayer(),
-run = () => {
-  findSongs().then(songs => player.songList = List(songs));
-};
-
-$(document)
-  .on('click', '.audio-player .play', ()=>{ player.play() })
-  .on('click', '.audio-player .pause', player.pause)
-  .on('click', '.audio-player .next', player.skip)
-  .on('click', '.audio-player .prev', player.recur)
-  .on('submit', 'form', ()=>{ return false; })
-  .ready(run);
-
 class App extends Component {
-  componentDidMount() {}
+  componentDidMount() {
+    let player = new AudioPlayer(),
+        run = () => {
+          findSongs().then(songs => player.songList = List(songs));
+        };
+
+    $(document)
+      .on('click', '.audio-player .play', ()=>{ player.play() })
+      .on('click', '.audio-player .pause', player.pause)
+      .on('click', '.audio-player .next', player.skip)
+      .on('click', '.audio-player .prev', player.recur)
+      .on('submit', 'form', ()=>{ return false; })
+      .ready(run);
+  }
+
   render() {
     return (
       <div className="App">
