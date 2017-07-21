@@ -16,6 +16,7 @@ body {
 
 .monolith {
   transition: all 0.375s ease;
+  transition-delay: 1.75s;
   width: 634px;
   height: 151px;
   background: url(images/mebop.png) no-repeat;
@@ -26,7 +27,8 @@ body {
 .audio-player {
   transition: all 0.967s ease; }
   .audio-player .control {
-    transition: all 0.967s ease; }
+    transition: all 0.967s ease;
+    position: relative; }
   .audio-player .pause {
     display: none; }
   .audio-player .prev, .audio-player .play, .audio-player .next {
@@ -38,6 +40,23 @@ body {
     margin-right: 220px; }
   .audio-player .next {
     margin-left: 200px; }
+  .audio-player .tracker {
+    position: fixed;
+    filter: drop-shadow(0 70px 10px #652f0e); }
+    .audio-player .tracker canvas {
+      position: fixed;
+      user-select: none;
+      left: 11%;
+      top: -72%;
+      transform: rotateX(70deg) scale(1.3);
+      transition: transform .35s ease, top 2.25s ease, filter 5s ease;
+      filter: drop-shadow(0 12px 0px white) sepia(100%); }
+    .audio-player .tracker > div {
+      filter: drop-shadow(0px 10px 15px white); }
+    .audio-player .tracker:not(.read-only) {
+      visibility: hidden; }
+      .audio-player .tracker:not(.read-only) canvas {
+        cursor: ns-resize; }
   .audio-player svg {
     cursor: pointer;
     transition: all 0.725s ease; }
@@ -54,6 +73,19 @@ body {
   .audio-player.playing .prev, .audio-player.playing .next {
     top: -27px;
     margin: 50px; }
+  .audio-player.playing .tracker.read-only {
+    visibility: hidden; }
+  .audio-player.playing .tracker:not(.read-only) {
+    visibility: visible; }
+  .audio-player.playing .tracker canvas {
+    top: 25% !important;
+    transform: rotateX(70deg) scale(1);
+    filter: drop-shadow(0 12px 0px white) sepia(0%); }
+  .audio-player.playing .tracker.tracking {
+    z-index: 1; }
+    .audio-player.playing .tracker.tracking canvas {
+      transform: rotateX(360deg) scale(0.5) translateY(-20%);
+      filter: drop-shadow(orange 0 0 2px); }
   .audio-player.playing.major {
     top: 38.2%; }
 
@@ -63,7 +95,8 @@ body {
   background: url(images/logo.png) no-repeat;
   margin: auto;
   position: absolute;
-  bottom: 15%;
+  bottom: 20%;
   left: 50%;
   margin-left: -110px;
-  z-index: -1; }
+  z-index: 1;
+  transition: transform .425s ease-in; }

@@ -8,6 +8,7 @@ body {
 }
 .monolith {
   transition: all 0.375s ease;
+  transition-delay: 1.75s;
   width: 634px; height: 151px; background: url(images/mebop.png) no-repeat;
   margin: 3% auto 0;
   &.hidden {
@@ -18,6 +19,7 @@ body {
   transition: all 0.967s ease;
   .control {
     transition: all 0.967s ease;
+    position: relative;
   }
   .pause { display: none; }
   .prev, .play, .next {
@@ -28,6 +30,26 @@ body {
   }
   .prev { margin-right: 220px; }
   .next { margin-left: 200px; }
+  .tracker {
+    position: fixed;
+    filter: drop-shadow(0 70px 10px #652f0e);
+    canvas {
+      position: fixed;
+      user-select: none;
+      left: 11%;
+      top: -72%;
+      transform: rotateX(70deg) scale(1.3);
+      transition: transform .35s ease, top 2.25s ease, filter 5s ease;
+      filter: drop-shadow(0 12px 0px white) sepia(100%);
+    }
+    & > div {
+      filter: drop-shadow(0px 10px 15px white);
+    }
+    &:not(.read-only) {
+      visibility: hidden;
+      canvas { cursor: ns-resize; }
+    }
+  }
   svg {
     cursor: pointer;
     transition: all 0.725s ease;
@@ -44,6 +66,22 @@ body {
     .pause { display: inline-block; }
     .play { display: none; }
     .prev, .next { top: -27px; margin: 50px; }
+    .tracker {
+      &.read-only { visibility: hidden; }
+      &:not(.read-only) { visibility: visible; }
+      canvas {
+        top: 25%!important;
+        transform: rotateX(70deg) scale(1);
+        filter: drop-shadow(0 12px 0px white) sepia(0%);        
+      }
+      &.tracking {
+        z-index: 1;
+        canvas {
+          transform: rotateX(360deg) scale(0.5) translateY(-20%);
+          filter: drop-shadow(orange 0 0 2px);
+        }
+      }
+    }
     &.major {
       top: 38.2%;
     }
@@ -51,5 +89,6 @@ body {
 }
 .icon {
   width: 221px; height: 267px; background: url(images/logo.png) no-repeat; margin: auto;
-  position: absolute; bottom: 15%; left: 50%; margin-left: -110px; z-index: -1;
+  position: absolute; bottom: 20%; left: 50%; margin-left: -110px; z-index: 1;
+  transition: transform .425s ease-in;
 }

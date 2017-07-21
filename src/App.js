@@ -4,21 +4,80 @@ import './App.css';
 
 import findSongs from './modules/soundcloud';
 import { AudioPlayer, List } from './modules/backbone'
+import './modules/knob';
 
 class App extends Component {
   componentDidMount() {
     let player = new AudioPlayer(),
         run = () => {
-          findSongs().then(songs => player.songList = List(songs));
+          findSongs().then(songs => {player.songList = List(songs);console.log(player.songList)});
+          let audio = $('audio')[0],
+              size = Math.round($(window).width() * 0.78);
+          $('.tracker:not(.read-only) .timeknob').knob({
+              "width": size,
+              "height": size,
+              "displayInput": false,
+              "displayPrevious": true,
+              "bgColor": "rgba(255,255,255,0.25)",
+              "fgColor": "#FFF28C",
+              "lineCap": "round",
+              "step": 0.5,
+              "angleOffset":180,
+              "thickness": "0.05",
+              'change': function(value) {
+                  audio.currentTime = audio.duration * value / 100;
+              },
+              'release': function (value) {
+                  if ($('.tracker').hasClass('tracking')) {
+                    $('.tracker').removeClass('tracking');
+                    $('.timeknob').trigger('configure', { "fgColor":"#FFF28C" });
+                  } else if ($('.tracker').hasClass('scrolling')) {
+                    audio.currentTime = audio.duration * value / 100;
+                  }
+                }
+          });
+          $('.tracker.read-only .timeknob').knob({
+              "width": size,
+              "height": size,
+              "displayInput": false,
+              "bgColor": "rgba(255,255,255,0.25)",
+              "fgColor": "#FFF28C",
+              "lineCap": "round",
+              "angleOffset":180,
+              "readOnly": true,
+              "thickness": "0.05"
+          });
         };
 
+    let scrolling = null;
     $(document)
       .on('click', '.audio-player .play', ()=>{ player.play() })
       .on('click', '.audio-player .pause', player.pause)
       .on('click', '.audio-player .next', player.skip)
       .on('click', '.audio-player .prev', player.recur)
+      .on('mousedown', '.tracker:not(.read-only) canvas', () => {
+          $('.tracker:not(.read-only)').addClass('tracking')
+          $('.tracker:not(.read-only) .timeknob').trigger('configure', { "fgColor":"#d05000" });
+      })
+      .on('mousewheel', '.tracker:not(.read-only) canvas', () => {
+          $('.tracker:not(.read-only)').addClass('scrolling');
+          if (scrolling) clearTimeout(scrolling);
+          scrolling = setTimeout(()=>{ $('.tracker').removeClass('scrolling'); scrolling = null }, 500);
+      })
       .on('submit', 'form', ()=>{ return false; })
       .ready(run);
+    
+    $(window).resize(function(){
+        let size = Math.round($(window).width() * 0.78)
+
+        $('.timeknob').trigger(
+            'configure',
+            {
+              "width": size,
+              "height": size,
+            }
+        );
+    })
   }
 
   render() {
@@ -28,6 +87,12 @@ class App extends Component {
         <div className="container">
           <div className="monolith"></div>
           <div className="major audio-player">
+            <div className="tracker">
+                <input className="timeknob" />
+            </div>
+            <div className="tracker read-only">
+                <input className="timeknob"  />
+            </div>
             <div className="prev control">
               <svg width="73px" height="81px" viewBox="0 0 73 81" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
                 <defs>
