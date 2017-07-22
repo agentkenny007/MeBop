@@ -2,7 +2,7 @@ import $ from 'jquery';
 import ID from './cred';
 let
 
-AudioPlayer = () => {
+AudioPlayer = function() {
   let audio = $('audio')[0],
       $current_time = $('.audio-player .current.time span'),
       $song_duration = $('.audio-player .duration span');
@@ -31,11 +31,11 @@ AudioPlayer = () => {
         audio.src = `${song.stream}?client_id=${ID}`; // set the song to play
       audio.play(); // play or unpause song
       if ($('.audio-player').hasClass('playing')){ // if audio player is playing
-        $('.icon').stop(true, false).animate({ "bottom" : "34.5%" }, 250, ()=>{ // bounce the music icon
+        $('.icon').stop(true, false).animate({ "bottom" : "34.5%" }, 250, function() { // bounce the music icon
           $(this).animate({ "bottom" : "20%" }, 750)
         })
       } else { // audio player is paused (not playing)
-        $('.icon').delay(345).animate({ "bottom" : "64.5%" }, 500, ()=>{ // jump the music icon
+        $('.icon').delay(345).animate({ "bottom" : "64.5%" }, 500, function() { // jump the music icon
           $(this).animate({ "bottom" : "20%" }, 1250)
         })
       }
@@ -50,7 +50,7 @@ AudioPlayer = () => {
     $('.audio-player').removeClass('playing'); // indicate a paused audio player
     $('.monolith').removeClass('hidden'); // reveal the big logo
     // shrinking animation for music icon
-    $('.icon').css({ "transform" : "scale(.5)", "z-index" : -1 }).stop(true, false).animate({ "bottom" : "14%", "opacity" : 0.725 }, 400, "linear", ()=>{
+    $('.icon').css({ "transform" : "scale(.5)", "z-index" : -1 }).stop(true, false).animate({ "bottom" : "14%", "opacity" : 0.725 }, 400, "linear", function() {
       $(this).css("transform", "scale(1)").animate({ "bottom" : "20%", "opacity" : 1, "z-index" : 1 }, 950)
     })
     $('.tracker.read-only .timeknob').val(this.lastTrackedValue).trigger('change'); // set the value of read only time tracker
@@ -65,7 +65,7 @@ AudioPlayer = () => {
       this.play(this.songList[this.nowPlaying]); // play next song
     } else {
       clearTimeout(this.stepping); // stop fasting forward
-      $('.tracker').removeClass('forw'); // clear fast forwarding flag
+      $('.tracker').removeClass('forw'); // remove fast forwarding flag
     }
   };
 

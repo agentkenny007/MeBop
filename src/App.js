@@ -24,10 +24,10 @@ class App extends Component {
               "step": 0.5,
               "angleOffset":180,
               "thickness": "0.05",
-              'change': function(value) {
+              'change': value => {
                   audio.currentTime = Math.round(audio.duration * value / 100);
               },
-              'release': function (value) {
+              'release': value => {
                   if ($('.tracker').hasClass('tracking')) {
                     $('.tracker').removeClass('tracking');
                     $('.timeknob').trigger('configure', { "fgColor":"#FFF28C" });
@@ -65,7 +65,7 @@ class App extends Component {
       })
       .on('mousedown', '.audio-player .next', () => {
         if (player.tracking) clearTimeout(player.tracking);
-        player.tracking = setTimeout(() => {
+        player.tracking = setTimeout(()=>{
             $('.tracker').addClass('forw');
             player.step(1); // fast forward in 1% increments
             player.tracking = null;
