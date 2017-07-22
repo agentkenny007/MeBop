@@ -16,7 +16,7 @@ AudioPlayer = function() {
   audio.addEventListener('timeupdate', ()=> 
     { // update the time tracker on the fly as long as there is no user input
       if ($('.tracker').hasClass('scrolling') === false && $('.tracker').hasClass('tracking') === false) // if user is not scrolling or tracking the time knob
-        $('.timeknob').val((audio.currentTime / audio.duration) * 100).trigger('change'); // set the value of the time knob based on current time
+        $('.progresscircle').val((audio.currentTime / audio.duration) * 100).trigger('change'); // set the value of the time knob based on current time
       $current_time.text(this.echoTime(audio.currentTime)); // update the current time
     });
   audio.addEventListener('loadeddata', ()=>
@@ -53,7 +53,7 @@ AudioPlayer = function() {
     $('.icon').css({ "transform" : "scale(.5)", "z-index" : -1 }).stop(true, false).animate({ "bottom" : "14%", "opacity" : 0.725 }, 400, "linear", function() {
       $(this).css("transform", "scale(1)").animate({ "bottom" : "20%", "opacity" : 1, "z-index" : 1 }, 950)
     })
-    $('.tracker.read-only .timeknob').val(this.lastTrackedValue).trigger('change'); // set the value of read only time tracker
+    $('.tracker.read-only .progresscircle').val(this.lastTrackedValue).trigger('change'); // set the value of read only time tracker
 
   };
 

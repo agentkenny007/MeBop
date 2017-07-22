@@ -4,6 +4,10 @@ Jukebox, DJ, & Karaoke App
 ___
 
 
-__MeBop__: music the way I like it. Search for and and add songs to build your music library.
+__MeBop__: Music my way.
+
+ - Search for and and snatch songs to build your music library.
+ - Create fully customizable playlists.
+ - Create and share custom DJ mixes.
 _____
 [This link is live.](http://mebop.surge.sh)
