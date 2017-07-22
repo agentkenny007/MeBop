@@ -25,7 +25,7 @@ class App extends Component {
               "angleOffset":180,
               "thickness": "0.05",
               'change': function(value) {
-                  audio.currentTime = audio.duration * value / 100;
+                  audio.currentTime = Math.round(audio.duration * value / 100);
               },
               'release': function (value) {
                   if ($('.tracker').hasClass('tracking')) {
@@ -59,7 +59,7 @@ class App extends Component {
           $('.tracker:not(.read-only)').addClass('tracking')
           $('.tracker:not(.read-only) .timeknob').trigger('configure', { "fgColor":"#d05000" });
       })
-      .on('mousewheel', '.tracker:not(.read-only) canvas', () => {
+      .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', () => {
           $('.tracker:not(.read-only)').addClass('scrolling');
           if (scrolling) clearTimeout(scrolling);
           scrolling = setTimeout(()=>{ $('.tracker').removeClass('scrolling'); scrolling = null }, 500);
@@ -177,6 +177,12 @@ class App extends Component {
                     </g>
                 </g>
               </svg>
+            </div>
+            <div className="current time">
+                <span></span>
+            </div>
+            <div className="time duration">
+                <span></span>
             </div>
             {/* <div className="info">Now Playing: <a className="loading" rel="noopener noreferrer" target="_blank">loading tracks...</a></div> */}
           </div>
