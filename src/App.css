@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Bubbler+One|Bungee+Outline|Josefin+Sans|Julius+Sans+One|Lato|Poiret+One|Raleway");
 .App {
   text-align: center; }
 
@@ -48,8 +49,8 @@ body {
       user-select: none;
       left: 11%;
       top: -72%;
-      transform: rotateX(70deg) scale(1.3);
-      transition: transform .35s ease, top 2.25s ease, filter 5s ease;
+      transform: rotateX(70deg) scale(1.3) rotateZ(45deg);
+      transition: transform 1.875s ease, top 2.25s ease, filter 5s ease;
       filter: drop-shadow(0 12px 0px white) sepia(100%); }
     .audio-player .tracker > div {
       filter: drop-shadow(0px 10px 15px white); }
@@ -57,6 +58,22 @@ body {
       visibility: hidden; }
       .audio-player .tracker:not(.read-only) canvas {
         cursor: ns-resize; }
+  .audio-player .time {
+    position: absolute;
+    bottom: 20px;
+    color: #fffad6;
+    font-size: 4em;
+    font-family: Josefin Sans;
+    z-index: -1;
+    filter: drop-shadow(#cc995c 0 12px 4px);
+    transition: color 1s, filter 2s ease-out, font-size 3s ease-in; }
+    .audio-player .time.current {
+      left: 20px; }
+    .audio-player .time.duration {
+      right: 20px; }
+    .audio-player .time span {
+      filter: drop-shadow(#7b472c 0 1px 2px);
+      transition: filter 1.67s ease; }
   .audio-player svg {
     cursor: pointer;
     transition: all 0.725s ease; }
@@ -86,6 +103,12 @@ body {
     .audio-player.playing .tracker.tracking canvas {
       transform: rotateX(360deg) scale(0.5) translateY(-20%);
       filter: drop-shadow(orange 0 0 2px); }
+  .audio-player.playing .time {
+    color: white;
+    filter: drop-shadow(darkorange 0 15px 5.575px);
+    font-size: 6.75em; }
+    .audio-player.playing .time span {
+      filter: drop-shadow(black 0 1px 2px); }
   .audio-player.playing.major {
     top: 38.2%; }
 

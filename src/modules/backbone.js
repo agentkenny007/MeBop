@@ -3,7 +3,9 @@ import ID from './cred';
 let
 
 AudioPlayer = function(){
-  let audio = $('audio')[0];
+  let audio = $('audio')[0],
+      $current_time = $('.audio-player .current.time span'),
+      $song_duration = $('.audio-player .duration span');
   this.nowPlaying = 0;
   this.lastTrackedValue = 0;
   this.songList = [];
@@ -13,6 +15,12 @@ AudioPlayer = function(){
     { // update the time tracker on the fly as long as there is no user input
       if ($('.tracker').hasClass('scrolling') === false && $('.tracker').hasClass('tracking') === false) // if user is not scrolling or tracking the time knob
         $('.timeknob').val((audio.currentTime / audio.duration) * 100).trigger('change'); // set the value of the time knob based on current time
+      console.log(this.echoTime(audio.currentTime))
+      $current_time.text(this.echoTime(audio.currentTime)); // update the current time
+    });
+  audio.addEventListener('loadeddata', ()=>
+    {
+      $song_duration.text(this.echoTime(audio.duration)); // update the duration of the current song
     });
 
   this.play = song => {
@@ -58,6 +66,23 @@ AudioPlayer = function(){
     this.nowPlaying--; // decrement now playing index designates previous song
     if (this.nowPlaying < 0) this.nowPlaying = this.songList.length - 1; // go to end of list if at beginning
     this.play(this.songList[this.nowPlaying]); // play previous song
+  };
+
+  this.echoTime = secs => {
+    let hours = Math.floor( secs / 3600 ), // how many hours do the seconds make up?
+        minutes = Math.floor( secs % 3600 / 60 ), // how many minutes do the seconds make up?
+        seconds = Math.ceil( secs % 3600 % 60 ); // get the exact second, rounding up decimals
+    return ( // return a string of the formatted time
+      hours === 0 ? '' : // don't create the hours field if under an hour 
+        hours > 0 && hours.toString().length < 2 ? '0' + hours + ':' : // create the hours field; add a '0' before the hour if under 10 hours
+        hours + ':' // create the hours field
+      ) + ( 
+        minutes.toString().length < 2 ? '0' + minutes : // create the minutes field; add a '0' before the minute if under 10 minutes
+        minutes // create the minutes field
+      ) + ':' + ( // add mandatory colon
+        seconds.toString().length < 2 ? '0' + seconds : // create the seconds field; add a '0' before the second if under 10 seconds
+        seconds // create the seconds field
+      );
   };
 },
 
