@@ -2,20 +2,21 @@ import $ from 'jquery';
 import ID from './cred';
 let
 
-AudioPlayer = function(){
+AudioPlayer = () => {
   let audio = $('audio')[0],
       $current_time = $('.audio-player .current.time span'),
       $song_duration = $('.audio-player .duration span');
   this.nowPlaying = 0;
   this.lastTrackedValue = 0;
   this.songList = [];
+  this.tracking = null;
+  this.stepping = null;
 
   audio.addEventListener('ended', ()=>{ this.skip() }); // go to next song at songs end
   audio.addEventListener('timeupdate', ()=> 
     { // update the time tracker on the fly as long as there is no user input
       if ($('.tracker').hasClass('scrolling') === false && $('.tracker').hasClass('tracking') === false) // if user is not scrolling or tracking the time knob
         $('.timeknob').val((audio.currentTime / audio.duration) * 100).trigger('change'); // set the value of the time knob based on current time
-      console.log(this.echoTime(audio.currentTime))
       $current_time.text(this.echoTime(audio.currentTime)); // update the current time
     });
   audio.addEventListener('loadeddata', ()=>
@@ -30,11 +31,11 @@ AudioPlayer = function(){
         audio.src = `${song.stream}?client_id=${ID}`; // set the song to play
       audio.play(); // play or unpause song
       if ($('.audio-player').hasClass('playing')){ // if audio player is playing
-        $('.icon').stop(true, false).animate({ "bottom" : "34.5%" }, 250, function(){ // bounce the music icon
+        $('.icon').stop(true, false).animate({ "bottom" : "34.5%" }, 250, ()=>{ // bounce the music icon
           $(this).animate({ "bottom" : "20%" }, 750)
         })
       } else { // audio player is paused (not playing)
-        $('.icon').delay(345).animate({ "bottom" : "64.5%" }, 500, function(){ // jump the music icon
+        $('.icon').delay(345).animate({ "bottom" : "64.5%" }, 500, ()=>{ // jump the music icon
           $(this).animate({ "bottom" : "20%" }, 1250)
         })
       }
@@ -49,7 +50,7 @@ AudioPlayer = function(){
     $('.audio-player').removeClass('playing'); // indicate a paused audio player
     $('.monolith').removeClass('hidden'); // reveal the big logo
     // shrinking animation for music icon
-    $('.icon').css({ "transform" : "scale(.5)", "z-index" : -1 }).stop(true, false).animate({ "bottom" : "14%", "opacity" : 0.725 }, 400, "linear", function(){
+    $('.icon').css({ "transform" : "scale(.5)", "z-index" : -1 }).stop(true, false).animate({ "bottom" : "14%", "opacity" : 0.725 }, 400, "linear", ()=>{
       $(this).css("transform", "scale(1)").animate({ "bottom" : "20%", "opacity" : 1, "z-index" : 1 }, 950)
     })
     $('.tracker.read-only .timeknob').val(this.lastTrackedValue).trigger('change'); // set the value of read only time tracker
@@ -57,15 +58,32 @@ AudioPlayer = function(){
   };
 
   this.skip = () => {
-    this.nowPlaying++; // increment now playing index designates next song
-    if (this.nowPlaying >= this.songList.length) this.nowPlaying = 0; // start over if list ends
-    this.play(this.songList[this.nowPlaying]); // play next song
+    if ($('.tracker').hasClass('forw') === false) { // if player is not fast forwarding
+      clearTimeout(this.tracking); // clear fast forwarding flag before it is set
+      this.nowPlaying++; // increment now playing index designates next song
+      if (this.nowPlaying >= this.songList.length) this.nowPlaying = 0; // start over if list ends
+      this.play(this.songList[this.nowPlaying]); // play next song
+    } else {
+      clearTimeout(this.stepping); // stop fasting forward
+      $('.tracker').removeClass('forw'); // clear fast forwarding flag
+    }
   };
 
   this.recur = () => {
-    this.nowPlaying--; // decrement now playing index designates previous song
-    if (this.nowPlaying < 0) this.nowPlaying = this.songList.length - 1; // go to end of list if at beginning
-    this.play(this.songList[this.nowPlaying]); // play previous song
+    if ($('.tracker').hasClass('rew') === false) { // if player is not rewinding
+      clearTimeout(this.tracking); // clear rewinding flag before it is set
+      this.nowPlaying--; // decrement now playing index designates previous song
+      if (this.nowPlaying < 0) this.nowPlaying = this.songList.length - 1; // go to end of list if at beginning
+      this.play(this.songList[this.nowPlaying]); // play previous song
+    } else {
+      clearTimeout(this.stepping); // stop rewinding
+      $('.tracker').removeClass('rew'); // remove rewinding flag
+    }
+  };
+
+  this.step = direction => { // to 'step' the track in a given direction (fast forward, rewind). goes nowhere if no direction is given or is NaN
+    let d = direction || 0, step = audio.duration * d / 100; // the amount to step is 'd' percent of the audio duration where 'd' is the amount given by 'direction'.
+    if (step) this.stepping = setInterval(()=>{ Math.round(audio.currentTime += step); }, 100); // step the current time in the given direction
   };
 
   this.echoTime = secs => {

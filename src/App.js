@@ -32,7 +32,7 @@ class App extends Component {
                     $('.tracker').removeClass('tracking');
                     $('.timeknob').trigger('configure', { "fgColor":"#FFF28C" });
                   } else if ($('.tracker').hasClass('scrolling')) {
-                    audio.currentTime = audio.duration * value / 100;
+                    audio.currentTime = Math.round(audio.duration * value / 100);
                   }
                 }
           });
@@ -51,10 +51,26 @@ class App extends Component {
 
     let scrolling = null;
     $(document)
-      .on('click', '.audio-player .play', ()=>{ player.play() })
+      .on('click', '.audio-player .play', () => { player.play() })
       .on('click', '.audio-player .pause', player.pause)
       .on('click', '.audio-player .next', player.skip)
       .on('click', '.audio-player .prev', player.recur)
+      .on('mousedown', '.audio-player .prev', () => {
+        if (player.tracking) clearTimeout(player.tracking);
+        player.tracking = setTimeout(() => {
+            $('.tracker').addClass('rew');
+            player.step(-1); // rewind in 1% decrements
+            player.tracking = null;
+        }, 450);
+      })
+      .on('mousedown', '.audio-player .next', () => {
+        if (player.tracking) clearTimeout(player.tracking);
+        player.tracking = setTimeout(() => {
+            $('.tracker').addClass('forw');
+            player.step(1); // fast forward in 1% increments
+            player.tracking = null;
+        }, 450);
+      })
       .on('mousedown', '.tracker:not(.read-only) canvas', () => {
           $('.tracker:not(.read-only)').addClass('tracking')
           $('.tracker:not(.read-only) .timeknob').trigger('configure', { "fgColor":"#d05000" });
@@ -62,17 +78,16 @@ class App extends Component {
       .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', () => {
           $('.tracker:not(.read-only)').addClass('scrolling');
           if (scrolling) clearTimeout(scrolling);
-          scrolling = setTimeout(()=>{ $('.tracker').removeClass('scrolling'); scrolling = null }, 500);
+          scrolling = setTimeout(() => { $('.tracker').removeClass('scrolling'); scrolling = null }, 500);
       })
-      .on('submit', 'form', ()=>{ return false; })
+      .on('submit', 'form', () => { return false; })
       .ready(run);
     
-    $(window).resize(function(){
+    $(window).resize(() => {
         let size = Math.round($(window).width() * 0.78)
 
         $('.timeknob').trigger(
-            'configure',
-            {
+            'configure', {
               "width": size,
               "height": size,
             }

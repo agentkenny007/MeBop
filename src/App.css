@@ -37,10 +37,18 @@ body {
   .audio-player .prev, .audio-player .next {
     position: relative;
     top: 40px; }
+    .audio-player .prev:active, .audio-player .next:active {
+      transition: transform 0.35s; }
   .audio-player .prev {
     margin-right: 220px; }
+    .audio-player .prev:active {
+      transform: rotateZ(-20deg) translateX(10px);
+      transform-origin: bottom right; }
   .audio-player .next {
     margin-left: 200px; }
+    .audio-player .next:active {
+      transform: rotateZ(20deg) translateX(-10px);
+      transform-origin: bottom left; }
   .audio-player .tracker {
     position: fixed;
     filter: drop-shadow(0 70px 10px #652f0e); }
