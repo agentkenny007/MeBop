@@ -60,6 +60,8 @@ body {
       transform: rotateX(70deg) scale(1.3) rotateZ(45deg);
       transition: transform 1.875s ease, top 2.25s ease, filter 5s ease;
       filter: drop-shadow(0 12px 0px white) sepia(100%); }
+    .audio-player .tracker input {
+      visibility: hidden; }
     .audio-player .tracker > div {
       filter: drop-shadow(0px 10px 15px white); }
     .audio-player .tracker:not(.read-only) {
@@ -80,8 +82,44 @@ body {
     .audio-player .time.duration {
       right: 20px; }
     .audio-player .time span {
+      cursor: default;
       filter: drop-shadow(#7b472c 0 1px 2px);
       transition: filter 1.67s ease; }
+  .audio-player .title {
+    position: fixed;
+    color: white;
+    font-family: Raleway; }
+    .audio-player .title.mono {
+      font-size: 8.75em;
+      width: 100%;
+      left: 0;
+      top: 10%;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 2.5s ease-out, visibility 2.5s;
+      filter: drop-shadow(darkorange 0 7px 8px);
+      text-shadow: 0 80px 2em #FFEE6F; }
+      .audio-player .title.mono span {
+        filter: drop-shadow(#7b472c 0 1px 2px); }
+    .audio-player .title.mini {
+      font-size: 1.525em;
+      right: 10px;
+      bottom: 10px;
+      transition: right 2.5s ease-out;
+      text-align: right;
+      min-width: 50%;
+      filter: drop-shadow(#ab5e00 0 3px 4px);
+      text-shadow: 0 1px 1px #92340e, 0 3.5px 0.875em #FFEE6F; }
+      .audio-player .title.mini span {
+        font-weight: bold;
+        display: block;
+        font-size: 2.25rem;
+        filter: drop-shadow(#351305 0 1px 1px); }
+    .audio-player .title marquee {
+      overflow: visible !important;
+      filter: drop-shadow(black 0 1px 1px); }
+    .audio-player .title span {
+      cursor: default; }
   .audio-player svg {
     cursor: pointer;
     transition: all 0.725s ease; }
@@ -117,6 +155,11 @@ body {
     font-size: 6.75em; }
     .audio-player.playing .time span {
       filter: drop-shadow(black 0 1px 2px); }
+  .audio-player.playing .title.mono {
+    visibility: visible;
+    opacity: 1; }
+  .audio-player.playing .title.mini {
+    right: 100%; }
   .audio-player.playing.major {
     top: 38.2%; }
 

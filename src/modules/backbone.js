@@ -29,7 +29,7 @@ AudioPlayer = function() {
     if (songFound){ // ensure there is a song to be played
       if (!audio.src.includes(song.stream)) // if current song does not match the song to play
         audio.src = `${song.stream}?client_id=${ID}`; // set the song to play
-      audio.play(); // play or unpause song
+      $('.audio-player .title span').attr("title", song.title).text(song.title); // update view of song title
       if ($('.audio-player').hasClass('playing')){ // if audio player is playing
         $('.icon').stop(true, false).animate({ "bottom" : "34.5%" }, 250, function() { // bounce the music icon
           $(this).animate({ "bottom" : "20%" }, 750)
@@ -41,11 +41,11 @@ AudioPlayer = function() {
       }
       $('.audio-player').addClass('playing'); // indicate a playing audio player
       $('.monolith').addClass('hidden'); // hide the big logo
+      audio.play(); // play song
     }
   };
 
   this.pause = () => {
-    audio.pause(); // pause song
     this.lastTrackedValue = $('.audio-player .tracker:not(.read-only) input').val() // record value of time tracker
     $('.audio-player').removeClass('playing'); // indicate a paused audio player
     $('.monolith').removeClass('hidden'); // reveal the big logo
@@ -54,7 +54,7 @@ AudioPlayer = function() {
       $(this).css("transform", "scale(1)").animate({ "bottom" : "20%", "opacity" : 1, "z-index" : 1 }, 950)
     })
     $('.tracker.read-only .progresscircle').val(this.lastTrackedValue).trigger('change'); // set the value of read only time tracker
-
+    audio.pause(); // pause song
   };
 
   this.skip = () => {

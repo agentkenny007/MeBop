@@ -187,7 +187,8 @@ class App extends Component {
             <div className="time duration">
                 <span></span>
             </div>
-            {/* <div className="info">Now Playing: <a className="loading" rel="noopener noreferrer" target="_blank">loading tracks...</a></div> */}
+             <div className="title mono"><marquee><span></span></marquee></div>
+             <div className="title mini">Now playing: <span>click play button to load a track</span></div>
           </div>
           {/* <div className="search-form">
             <form action="#">
