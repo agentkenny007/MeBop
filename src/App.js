@@ -2,16 +2,17 @@ import $ from 'jquery';
 import React, { Component } from 'react';
 import './App.css';
 
-import findSongs from './modules/soundcloud';
-import { AudioPlayer, List } from './modules/backbone'
+import { AudioPlayer } from './modules/backbone'
 import './modules/knob';
+
+let touch = 'ontouchstart' in window; // detect touchable document
 
 class App extends Component {
   componentDidMount() {
     let player = new AudioPlayer(), // audio player object
         run = () => { // init function
-          findSongs().then(songs => {player.songList = List(songs);console.log(player.songList)}); // get songs and populate song list
           let audio = $('audio')[0]; // audio element
+          player.getSongs(); // retrieve songs to play (uses soundcloud api)
           $('.tracker:not(.read-only) .progresscircle').knob({ // initialize trackable progress circle
             // options
               "width": size, "height": size, // size based on window width
@@ -39,15 +40,14 @@ class App extends Component {
               "angleOffset": 180, "thickness": 0.05
           });
         }, scrolling = null, // to clear progress scrolling
-        size = Math.round($(window).width() * 0.78), // calculate 78% of window width (for progress circle dimensions)        
-        touch = 'ontouchstart' in window; // detect touchable document
+        size = Math.round($(window).width() * 0.78); // calculate 78% of window width (for progress circle dimensions)        
 
     $(document) // register live events
-      .on('click', '.audio-player .play', () => { player.play() }) // when the play button is clicked, play
+      .on('click', '.audio-player .play', player.play) // when the play button is clicked, play
       .on('click', '.audio-player .pause', player.pause) // when the pause button is clicked, pause
       .on('click', '.audio-player .next', player.skip) // when the next button is clicked, skip forward
       .on('click', '.audio-player .prev', player.recur) // when the prev button is clicked, skip backward
-      .on('mousedown touchstart', '.audio-player .next', () => { // when the next button is pressed
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => { // when the next button is pressed and held, fast forward
         if (player.tracking) clearTimeout(player.tracking); // reset fast forward timeout
         player.tracking = setTimeout(()=>{ // set timeout to begin fast forward
             $('.tracker').addClass('forw'); // indicate a fast forwarding progress circle
@@ -55,7 +55,7 @@ class App extends Component {
             player.tracking = null; // nullify timeout
         }, 450); // fast forward after 450ms
       })
-      .on('mousedown touchstart', '.audio-player .prev', () => { // when the prev button is pressed
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => { // when the prev button is pressed
         if (player.tracking) clearTimeout(player.tracking); // reset rewind timeout
         player.tracking = setTimeout(() => { // set timeout to begin rewind
             $('.tracker').addClass('rew'); // indicate a rewinding progress circle
@@ -63,10 +63,11 @@ class App extends Component {
             player.tracking = null; // nullify timeout
         }, 450); // rewind after 450ms
       })
-      .on('mousedown touchstart', '.tracker:not(.read-only) canvas', () => { // when the progress circle is pressed
+      .on(touch ? 'touchstart' : 'mousedown', '.tracker:not(.read-only) canvas', () => { // when the progress circle is pressed
         $('.tracker:not(.read-only)').addClass('tracking'); // indicate manual tracking on progress circle
         $('.tracker:not(.read-only) .progresscircle').trigger('configure', { "fgColor":"#d05000" }); // change color of progress circle to dark orange
       })
+      .on('touchend', '.audio-player .prev, .audio-player .next', () => { clearTimeout(player.stepping); }) // stop fast forward/rewind on mobile
       .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', () => { // when progress circle is scrolled
         if (!$('.tracker').hasClass('scrolling')) $('.tracker:not(.read-only)').addClass('scrolling'); // indicate scrolling on progress circle
         if (scrolling) clearTimeout(scrolling); // reset timeout to clear scrolling flag
@@ -108,9 +109,9 @@ class App extends Component {
                         <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
                     </filter>
                 </defs>
-                <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g id="HD-Landscape" transform="translate(-391.000000, -309.000000)">
-                        <g id="Group-3" transform="translate(396.000000, 311.000000)">
+                        <g transform="translate(396.000000, 311.000000)">
                             <g id="Triangle-Copy-2" transform="translate(31.500000, 36.498978) scale(-1, 1) translate(-31.500000, -36.498978) ">
                                 <use fill="black" fillOpacity="1" filter="url(#filter-2)" xlinkHref="#prev-track"></use>
                                 <use stroke="#752F00" strokeWidth="1" fillOpacity="0.1953125" fill="#FFFFFF" fillRule="evenodd" xlinkHref="#prev-track"></use>
@@ -154,7 +155,7 @@ class App extends Component {
                         <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
                     </filter>
                 </defs>
-                <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g id="HD-Landscape" transform="translate(-636.000000, -204.000000)">
                         <g id="Rectangle-6">
                             <use fill="black" fillOpacity="1" filter="url(#filter-2)" xlinkHref="#path-1"></use>
@@ -171,7 +172,7 @@ class App extends Component {
                 </defs>
                 <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                     <g transform="translate(-903.000000, -309.000000)">
-                        <g id="Group-3" transform="translate(396.000000, 311.000000)">
+                        <g transform="translate(396.000000, 311.000000)">
                             <g id="Triangle-Copy">
                                 <use fill="black" fillOpacity="1" filter="url(#filter-2)" xlinkHref="#next-track"></use>
                                 <use stroke="#752F00" strokeWidth="1" fillOpacity="0.1953125" fill="#FFFFFF" fillRule="evenodd" xlinkHref="#next-track"></use>
@@ -182,13 +183,13 @@ class App extends Component {
               </svg>
             </div>
             <div className="current time">
-                <span></span>
+                <span>--:--</span>
             </div>
             <div className="time duration">
-                <span></span>
+                <span>--:--</span>
             </div>
              <div className="title mono"><marquee><span></span></marquee></div>
-             <div className="title mini">Now playing: <span>click play button to load a track</span></div>
+             <div className="title mini">Now playing: <span>loading songs...</span></div>
           </div>
           {/* <div className="search-form">
             <form action="#">

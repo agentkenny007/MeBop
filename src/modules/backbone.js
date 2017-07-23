@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import ID from './cred';
-let
+import findSongs from './soundcloud';
+
+let touch = 'ontouchstart' in window,
 
 AudioPlayer = function() {
   let audio = $('audio')[0],
@@ -24,9 +26,22 @@ AudioPlayer = function() {
       $song_duration.text(this.echoTime(audio.duration)); // update the duration of the current song
     });
 
-  this.play = song => {
-    let songFound = !!(song = song || this.songList[this.nowPlaying]);
-    if (songFound){ // ensure there is a song to be played
+  this.getSongs = () => // get songs and populate song list
+    findSongs().then(songs => { // retrieve songs using soundcloud api
+      this.songList = List(songs);console.log(this.songList) // map songs to songList array
+      if ($('.audio-player').hasClass('error')){ // did the player break?
+        $('.audio-player').removeClass('error'); this.play(); // remove error flag and play song
+      } else $('.audio-player .mini.title span').html(`<b style="font-size: 0.525em">songs loaded! ${ touch ? 'tap' : 'click' } triangle to play :-)</b>`); // update view if songs loaded
+    }).catch(e => $('.audio-player .mini.title span').html('<b style="font-size: 0.525em">error loading songs. :(</b>')); // update view if error loading songs
+
+  this.play = (song) => {
+    let songFound = !!( // return a boolean as to whether or not there is a song to play
+      song = song.stream ? song // use the given song if it has a stream link
+      : this.songList.length ? // otherwise, are there songs in the song list?
+        this.songList[this.nowPlaying] // if so, use the currently playing song
+        : 0); // otherwise, use '0' (no song found)
+
+    if (songFound){ // ensure there is a song to be played (streamed)
       if (!audio.src.includes(song.stream)) // if current song does not match the song to play
         audio.src = `${song.stream}?client_id=${ID}`; // set the song to play
       $('.audio-player .title span').attr("title", song.title).text(song.title); // update view of song title
@@ -42,6 +57,9 @@ AudioPlayer = function() {
       $('.audio-player').addClass('playing'); // indicate a playing audio player
       $('.monolith').addClass('hidden'); // hide the big logo
       audio.play(); // play song
+    } else { // no song found
+      $('.audio-player').addClass('error'); // indicate a broken audio player
+      this.getSongs(); // try to load songs
     }
   };
 
