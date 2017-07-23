@@ -76,6 +76,19 @@ class App extends Component {
             scrolling = null; // nullify timeout
         }, 500); // clear flag if scrolling hasn't fired again after 0.5 seconds
       })
+      .on('keyup', e => {
+          switch (e.which) { // what key was pressed?
+              case 32: $('.audio-player').hasClass('playing') ? player.pause() : player.play() // the spacebar (play/pause song)
+                break;
+              case 37: player.recur() // left arrow (previous song)
+                break;
+              case 39: player.skip() // right arrow (next song)
+                break;
+          
+              default:break;
+          }
+        console.log(e.which)
+      })
       .on('submit', 'form', () => { return false; }) // do not refresh page on form submit
       .ready(run); // when the document is ready, init
     
