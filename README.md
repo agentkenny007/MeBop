@@ -4,9 +4,9 @@ Jukebox, DJ, & Karaoke App
 ___
 
 
-__MeBop__: Music my way.
+__MeBop!__: Music my way.
 
- - Search for and and snatch songs to build your music library.
+ - Search for and snatch songs to build your music library.
  - Create fully customizable playlists.
  - Create and share custom DJ mixes.
 _____
