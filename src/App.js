@@ -8,96 +8,34 @@ import './modules/knob';
 let touch = 'ontouchstart' in window; // detect touchable document
 
 class App extends Component {
-  componentDidMount() {
-    let player = new AudioPlayer(), // audio player object
+  componentDidMount() { // the app is mounted, DOM nodes are ready
+    let player = new AudioPlayer(), // audio player instance
         run = () => { // init function
-          let audio = $('audio')[0]; // audio element
-          player.getSongs(); // retrieve songs to play (uses soundcloud api)
-          $('.tracker:not(.read-only) .progresscircle').knob({ // initialize trackable progress circle
-            // options
-              "width": size, "height": size, // size based on window width
-              "displayInput": false, "displayPrevious": true,
-              "fgColor": "#FFF28C", "bgColor": "rgba(255,255,255,0.25)",
-              "lineCap": "round",
-              "step": 0.5, "angleOffset": 180, "thickness": 0.05,
-              'change': value => { // when circle value is changed (manual tracking)
-                  audio.currentTime = Math.round(audio.duration * value / 100); // update time according to given value (%)
-              },
-              'release': value => { // when circle is released (on scroll)
-                  if ($('.tracker').hasClass('tracking')) { // circle is being tracked manually
-                    $('.tracker').removeClass('tracking'); // clear manual tracking flag
-                    $('.progresscircle').trigger('configure', { "fgColor":"#FFF28C" }); // reset circle to primary colour
-                  } else if ($('.tracker').hasClass('scrolling')) // circle is being scrolled
-                    audio.currentTime = Math.round(audio.duration * value / 100); // update time according to value given (%)
-                }
-          });
-          $('.tracker.read-only .progresscircle').knob({ // initialize read only progress circle
-            //options
-              "width": size, "height": size, // size based on window width
-              "displayInput": false, "readOnly": true,
-              "fgColor": "#FFF28C", "bgColor": "rgba(255,255,255,0.25)",
-              "lineCap": "round",
-              "angleOffset": 180, "thickness": 0.05
-          });
-        }, scrolling = null, // to clear progress scrolling
-        size = Math.round($(window).width() * 0.78); // calculate 78% of window width (for progress circle dimensions)        
+          player.init(); // initialize audio player
+        };
 
     $(document) // register live events
       .on('click', '.audio-player .play', player.play) // when the play button is clicked, play
       .on('click', '.audio-player .pause', player.pause) // when the pause button is clicked, pause
       .on('click', '.audio-player .next', player.skip) // when the next button is clicked, skip forward
       .on('click', '.audio-player .prev', player.recur) // when the prev button is clicked, skip backward
-      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => { // when the next button is pressed and held, fast forward
-        if (player.tracking) clearTimeout(player.tracking); // reset fast forward timeout
-        player.tracking = setTimeout(()=>{ // set timeout to begin fast forward
-            $('.tracker').addClass('forw'); // indicate a fast forwarding progress circle
-            player.step(1); // fast forward in 1% increments
-            player.tracking = null; // nullify timeout
-        }, 450); // fast forward after 450ms
-      })
-      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => { // when the prev button is pressed
-        if (player.tracking) clearTimeout(player.tracking); // reset rewind timeout
-        player.tracking = setTimeout(() => { // set timeout to begin rewind
-            $('.tracker').addClass('rew'); // indicate a rewinding progress circle
-            player.step(-1); // rewind in 1% decrements
-            player.tracking = null; // nullify timeout
-        }, 450); // rewind after 450ms
-      })
-      .on(touch ? 'touchstart' : 'mousedown', '.tracker:not(.read-only) canvas', () => { // when the progress circle is pressed
-        $('.tracker:not(.read-only)').addClass('tracking'); // indicate manual tracking on progress circle
-        $('.tracker:not(.read-only) .progresscircle').trigger('configure', { "fgColor":"#d05000" }); // change color of progress circle to dark orange
-      })
-      .on('touchend', '.audio-player .prev, .audio-player .next', () => { clearTimeout(player.stepping); }) // stop fast forward/rewind on mobile
-      .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', () => { // when progress circle is scrolled
-        if (!$('.tracker').hasClass('scrolling')) $('.tracker:not(.read-only)').addClass('scrolling'); // indicate scrolling on progress circle
-        if (scrolling) clearTimeout(scrolling); // reset timeout to clear scrolling flag
-        scrolling = setTimeout(() => { // set timeout to clear scrolling flag
-            $('.tracker').removeClass('scrolling'); // indicate progress circle no longer scrolling
-            scrolling = null; // nullify timeout
-        }, 500); // clear flag if scrolling hasn't fired again after 0.5 seconds
-      })
-      .on('keyup', e => {
-          switch (e.which) { // what key was pressed?
-              case 32: $('.audio-player').hasClass('playing') ? player.pause() : player.play() // the spacebar (play/pause song)
-                break;
-              case 37: player.recur() // left arrow (previous song)
-                break;
-              case 39: player.skip() // right arrow (next song)
-                break;
-          
-              default:break;
-          }
-        console.log(e.which)
-      })
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => { player.press('forward') }) // when the next button is pressed, try fast forward
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => { player.press('backward') }) // when the prev button is pressed, try rewind
+      .on(touch ? 'touchstart' : 'mousedown', '.tracker:not(.read-only) canvas', player.track) // when the progress circle is pressed, start tracking
+      .on('touchend', '.audio-player .prev, .audio-player .next', player.continue) // stop fast forward/rewind on mobile
+      .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', player.scroll) // when progress circle is scrolled, start scrolling
+      .on('keydown', player.detectKey) // when a keystroke is started
+      .on('keyup', player.collectKey) // when a keystroke is fired
       .on('submit', 'form', () => { return false; }) // do not refresh page on form submit
       .ready(run); // when the document is ready, init
     
     $(window).resize(() => { // when the window is resized
+        let size = Math.round($(window).width() * 0.78); // calculate 78% of window width (for progress circle dimensions)        
         $('.progresscircle').trigger('configure', { "width":size, "height":size, }); // set size of time tracker
     })
   }
 
-  render() {
+  render() { // render the app's view
     return (
       <div className="App">
         <audio className="player"></audio>
