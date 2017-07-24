@@ -10,12 +10,13 @@ AudioPlayer = function() {
       $audio_player = $('.audio-player'), // the audio player
       $current_time = $audio_player.find('.current.time span'), // the audio player song current time field
       $song_duration = $audio_player.find('.duration span'); // the audio player song duration field
-  this.nowPlaying = 0; // the index of currently playing song
   this.lastTrackedValue = 0; // to detect time of song when paused
-  this.songList = []; // the list of songs to play
-  this.tracking = null; // to detect progress tracking
+  this.lastVolumeValue = 1; // to detect volume of song when muted
+  this.nowPlaying = 0; // the index of currently playing song
   this.scrolling = null; // to clear progress scrolling
+  this.songList = []; // the list of songs to play
   this.stepping = null; // to fast forward or rewind progress
+  this.tracking = null; // to detect progress tracking
 
   audio.addEventListener('ended', ()=>{ this.skip() }); // go to next song at songs end
   audio.addEventListener('timeupdate', ()=> 
@@ -25,8 +26,9 @@ AudioPlayer = function() {
       $current_time.text(this.echoTime(audio.currentTime)); // update the current time
     });
   audio.addEventListener('loadeddata', ()=>
-    {
+    { // update player volume and song duration once song loads
       $song_duration.text(this.echoTime(audio.duration)); // update the duration of the current song
+      this.lastVolumeValue = audio.volume; // use the current volume as the unmute volume
     });
 
   this.collectKey = e => { // to detect keyboard shortcuts (key fired)
@@ -112,14 +114,23 @@ AudioPlayer = function() {
         "angleOffset": 180, "thickness": 0.05
     });
     this.getSongs(); // retrieve songs to play
-  }
+  };
+
+  this.mute = () => { // to mute/unmute the audio playe
+    if ($audio_player.find('.volume').hasClass('mute')) // is volume muted?
+      audio.volume = this.lastVolumeValue; // unmute volume
+    else {
+      this.lastVolumeValue = audio.volume; audio.volume = 0;
+    }
+    $audio_player.find('.volume').toggleClass('mute') // toggle the mute flag
+  };
 
   this.pause = () => { // to pause the audio player
     this.lastTrackedValue = $audio_player.find('.tracker:not(.read-only) input').val() // record value of time tracker
     $audio_player.removeClass('playing'); // indicate a paused audio player
     $('.monolith').removeClass('hidden'); // reveal the big logo
     // shrinking animation for music icon
-    $('.icon').css({ "transform" : "scale(.5)", "z-index" : -1 }).stop(true, false).animate({ "bottom" : "14%", "opacity" : 0.725 }, 400, "linear", function() {
+    $('.logo-icon').css({ "transform" : "scale(.5)", "z-index" : -1 }).stop(true, false).animate({ "bottom" : "14%", "opacity" : 0.725 }, 400, "linear", function() {
       $(this).css("transform", "scale(1)").animate({ "bottom" : "20%", "opacity" : 1, "z-index" : 1 }, 950)
     })
     $('.tracker.read-only .progresscircle').val(this.lastTrackedValue).trigger('change'); // set the value of read only time tracker
@@ -138,11 +149,11 @@ AudioPlayer = function() {
         audio.src = `${song.stream}?client_id=${ID}`; // set the song to play
       $audio_player.find('.title span').attr("title", song.title).text(song.title); // update view of song title
       if ($audio_player.hasClass('playing')){ // if audio player is playing
-        $('.icon').stop(true, false).animate({ "bottom" : "34.5%" }, 250, function() { // bounce the music icon
+        $('.logo-icon').stop(true, false).animate({ "bottom" : "34.5%" }, 250, function() { // bounce the music icon
           $(this).animate({ "bottom" : "20%" }, 750)
         })
       } else { // audio player is paused (not playing)
-        $('.icon').delay(345).animate({ "bottom" : "64.5%" }, 500, function() { // jump the music icon
+        $('.logo-icon').delay(345).animate({ "bottom" : "64.5%" }, 500, function() { // jump the music icon
           $(this).animate({ "bottom" : "20%" }, 1250)
         })
       }
@@ -158,7 +169,7 @@ AudioPlayer = function() {
   this.press = control => { // to start fast forward or rewind when respective control is pressed and held
     if (this.tracking) clearTimeout(this.tracking); // reset fast forward or rewind timeout
     this.tracking = setTimeout(()=>{ // set timeout to begin fast forward
-        $('.tracker').addClass(control); // indicate a steping progress circle (forward or backward)
+        $('.tracker').addClass(control); // indicate a stepping progress circle (forward or backward)
         this.step(control === 'forward' ? 1 : -1); // fast forward or rewind in 1% increments
         this.tracking = null; // nullify timeout
     }, 450); // starts stepping when pressed for 450ms
@@ -197,10 +208,9 @@ AudioPlayer = function() {
   };
 
   this.track = () => { // to track the progress circle
-    $('.tracker:not(.read-only)').addClass('tracking'); // indicate manual tracking on progress circle
-    $('.tracker:not(.read-only) .progresscircle').trigger('configure', { "fgColor":"#d05000" }); // change color of progress circle to dark orange
+    $audio_player.find('.tracker:not(.read-only)').addClass('tracking'); // indicate manual tracking on progress circle
+    $audio_player.find('.tracker:not(.read-only) .progresscircle').trigger('configure', { "fgColor":"#d05000" }); // change color of progress circle to dark orange
   };
-
 },
 
 List = songs => {
