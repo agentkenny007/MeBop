@@ -30,6 +30,10 @@ body {
   .audio-player .control {
     transition: all 0.967s ease;
     position: relative; }
+    .audio-player .control svg {
+      transition: all 0.725s ease; }
+      .audio-player .control svg:hover {
+        transform: scale(1.25); }
   .audio-player .pause {
     display: none; }
   .audio-player .prev, .audio-player .play, .audio-player .next {
@@ -120,11 +124,29 @@ body {
       filter: drop-shadow(black 0 1px 1px); }
     .audio-player .title span {
       cursor: default; }
-  .audio-player svg {
-    cursor: pointer;
-    transition: all 0.725s ease; }
-    .audio-player svg:hover {
+  .audio-player .volume {
+    position: fixed;
+    top: 15px;
+    right: 80px; }
+    .audio-player .volume .icon {
+      position: absolute;
+      transition: opacity 0.695s, transform 0.575s ease; }
+      .audio-player .volume .icon.audible {
+        left: 0;
+        opacity: 1; }
+      .audio-player .volume .icon.muted {
+        left: -2px;
+        opacity: 0; }
+    .audio-player .volume.mute .icon.audible {
+      opacity: 0; }
+    .audio-player .volume.mute .icon.muted {
+      opacity: 1; }
+    .audio-player .volume:hover .icon {
       transform: scale(1.25); }
+      .audio-player .volume:hover .icon.muted {
+        left: -4px; }
+  .audio-player svg {
+    cursor: pointer; }
   .audio-player.major {
     position: absolute;
     width: 100%;
@@ -163,7 +185,7 @@ body {
   .audio-player.playing.major {
     top: 38.2%; }
 
-.icon {
+.logo-icon {
   width: 221px;
   height: 267px;
   background: url(images/logo.png) no-repeat;

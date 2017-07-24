@@ -21,6 +21,12 @@ body {
   .control {
     transition: all 0.967s ease;
     position: relative;
+    svg {
+      transition: all 0.725s ease;
+      &:hover {
+        transform: scale(1.25);
+      }
+    }
   }
   .pause { display: none; }
   .prev, .play, .next {
@@ -138,12 +144,31 @@ body {
       cursor: default;
     }
   }
+  .volume {
+    position: fixed;
+    top: 15px;
+    right: 80px;
+    .icon {
+      position: absolute;
+      transition: opacity 0.695s, transform 0.575s ease;
+      &.audible { left: 0; opacity: 1; }
+      &.muted { left: -2px; opacity: 0; }
+    }
+    &.mute {
+      .icon {
+        &.audible { opacity: 0; }
+        &.muted { opacity: 1; }
+      }
+    }
+    &:hover {
+      .icon {
+        transform: scale(1.25);
+        &.muted { left: -4px; }
+      }
+    }
+  }
   svg {
     cursor: pointer;
-    transition: all 0.725s ease;
-    &:hover {
-      transform: scale(1.25);
-    }
   }
   &.major {
     position: absolute;
@@ -192,7 +217,7 @@ body {
     }
   }
 }
-.icon {
+.logo-icon {
   width: 221px; height: 267px; background: url(images/logo.png) no-repeat; margin: auto;
   position: absolute; bottom: 20%; left: 50%; margin-left: -110px; z-index: 1;
   transition: transform .425s ease-in;
