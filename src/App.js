@@ -21,8 +21,8 @@ class App extends Component {
       .on('click', '.audio-player .next', player.skip) // when the next button is clicked, skip forward
       .on('click', '.audio-player .prev', player.recur) // when the prev button is clicked, skip backward
       .on('click', '.audio-player .volume .icon', player.mute) // when the volume icon is clicked, toggle mute
-      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => { player.press('forward') }) // when the next button is pressed, try fast forward
-      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => { player.press('backward') }) // when the prev button is pressed, try rewind
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => { player.press('forward', 1) }) // when the next button is pressed, try fast forwarding in 1% increments
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => { player.press('backward', 1) }) // when the prev button is pressed, try rewinding in 1% decrements
       .on(touch ? 'touchstart' : 'mousedown', '.tracker:not(.read-only) canvas', player.track) // when the progress circle is pressed, start tracking
       .on('touchend', '.audio-player .prev, .audio-player .next', player.continue) // stop fast forward/rewind on mobile
       .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', player.scroll) // when progress circle is scrolled, start scrolling
