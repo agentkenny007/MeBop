@@ -22,7 +22,7 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
   audio.addEventListener('ended', ()=>{ this.skip() }); // go to next song at songs end
   audio.addEventListener('loadeddata', ()=>
     { // update player volume and song duration once song loads
-      $song_duration.text(this.echoTime(audio.duration, audio.duration)); // update the duration of the current song
+      $song_duration.text(this.echoTime(audio.duration)); // update the duration of the current song
       this.lastVolumeValue = audio.volume; // use the current volume as the unmute volume
     });
   audio.addEventListener('timeupdate', ()=> 
