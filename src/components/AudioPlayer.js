@@ -219,3 +219,11 @@ export class Tracker extends Component { // back button large
     );
   }
 }
+
+export class VolumeScrubber extends Component { // volume scrubber
+  render() {
+    return (
+        <div className="scrubber"><div><div></div></div></div>
+    );
+  }
+}

@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import { AudioPlayer } from './modules/backbone';
-import { AudioAudible, AudioMuted, PlayControl, PauseControl, PrevControl, NextControl, Tracker } from './components/AudioPlayer';
+import { AudioAudible, AudioMuted, PlayControl, PauseControl, PrevControl, NextControl, Tracker, VolumeScrubber } from './components/AudioPlayer';
 import './modules/knob';
 
 let touch = 'ontouchstart' in window; // detect touchable document
@@ -24,6 +24,9 @@ class App extends Component {
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => { player.press('forward', 1) }) // when the next button is pressed, try fast forwarding in 1% increments
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => { player.press('backward', 1) }) // when the prev button is pressed, try rewinding in 1% decrements
       .on(touch ? 'touchstart' : 'mousedown', '.tracker:not(.read-only) canvas', player.track) // when the progress circle is pressed, start tracking
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'start')) // when the volume scrubber is clicked, adjust volume
+      .on(touch ? 'touchmove' : 'mousemove', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'move')) // when the volume scrubber is dragged, adjust volume
+      .on(touch ? 'touchend touchcancel' : 'mouseup', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'end')) // when the volume scrubber is released, stop adjusting volume
       .on('touchend', '.audio-player .prev, .audio-player .next', player.continue) // stop fast forward/rewind on mobile
       .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', player.scroll) // when progress circle is scrolled, start scrolling
       .on('keydown', player.detectKey) // when a keystroke is started
@@ -50,7 +53,7 @@ class App extends Component {
             <div className="time duration"><span>--:--</span></div>
              <div className="title mono"><marquee><span></span></marquee></div>
              <div className="title mini">Now playing: <span>loading songs...</span></div>
-             <div className="volume"><AudioAudible /><AudioMuted /></div>
+             <div className="volume"><AudioAudible /><AudioMuted /><VolumeScrubber /></div>
           </div>
           {/* <div className="search-form">
             <form action="#">

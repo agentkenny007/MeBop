@@ -9,7 +9,9 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
   let audio = $('audio')[0], // the primary audio element
       $audio_player = $('.audio-player'), // the audio player
       $current_time = $audio_player.find('.current.time span'), // the audio player song current time field
+      $scrubber = $('.scrubber > div'), // the audio player volume scrubber
       $song_duration = $audio_player.find('.duration span'), // the audio player song duration field
+      $song_volume = $audio_player.find('.volume'), // the audio player volume control
       $tracker = $('.tracker'); // the audio player progress tracker
   this.lastTrackedValue = 0; // to record time of song when paused
   this.lastVolumeValue = 1; // to record volume of song when muted
@@ -20,18 +22,24 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
   this.tracking = null; // to detect progress tracking
 
   audio.addEventListener('ended', ()=>{ this.skip() }); // go to next song at songs end
-  audio.addEventListener('loadeddata', ()=>
-    { // update player volume and song duration once song loads
-      $song_duration.text(this.echoTime(audio.duration)); // update the duration of the current song
-      this.lastVolumeValue = audio.volume; // use the current volume as the unmute volume
-    });
-  audio.addEventListener('timeupdate', ()=> 
-    { // update the time tracker on the fly as long as there is no user input
-      if ($tracker.hasClass('scrolling') === false && $tracker.hasClass('tracking') === false) // if user is not scrolling or tracking the time knob (no flag is set)
-        $tracker.find('.progresscircle').val((audio.currentTime / audio.duration) * 100).trigger('change'); // set the value of the time knob based on current time
-      $current_time.text(this.echoTime(audio.currentTime, audio.duration)); // update the current time
-      console.log(audio.currentTime, audio.duration)
-    });
+  audio.addEventListener('loadeddata', ()=>{ this.setupSong() }); // initialise song once loaded
+  audio.addEventListener('timeupdate', ()=>{ this.updateTime() }); // update view with time of song
+  audio.addEventListener('volumechange', ()=>{ this.changeVolume() }); // update view with song volume
+
+  this.adjustVolume = (e, eType) => { // to adjust the songs volume
+    if (eType === 'start' && !$scrubber.hasClass('scrubbing')) $scrubber.addClass('scrubbing'); // indicate a scrubbing volume adjuster (set flag)
+    if (eType === 'end') $scrubber.removeClass('scrubbing'); // indicate volume adjuster no longer scrubbing (remove flag)
+    if ($scrubber.hasClass('scrubbing')) { // adjust song volume if flag is set
+      e	= touch ? e.originalEvent.touches[0] : e; // mouse or touch event?
+      audio.volume = Math.abs((e.pageY - ($scrubber.offset().top + $scrubber.height())) / $scrubber.height()); // adjust the volume according to where the cursor is dragged over the scrubber
+    }
+  };
+
+  this.changeVolume = () => { // to update the view as the volume is adjusted
+    $scrubber.find('div').height(audio.volume * 100 + '%'); // update the scrubber height
+    if (audio.volume > 0 && $song_volume.hasClass('mute')) $song_volume.removeClass('mute'); // toggle mute
+    if (audio.volume <= 0 && !$song_volume.hasClass('mute')) $song_volume.addClass('mute');
+  };
 
   this.collectKey = e => { // to detect keyboard shortcuts (key fired)
     switch (e.which) { // what key?
@@ -64,9 +72,9 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
   };
 
   this.echoTime = (secs, duration) => { // to get a time string based on the given seconds and duration
-    let hours = Math.floor( secs / 3600 ), // how many hours do the seconds make up?
-        minutes = Math.floor( secs % 3600 / 60 ), // how many minutes do the seconds make up?
-        seconds = Math.ceil( secs % 3600 % 60 ); // get the exact second, rounding up decimals
+    let hours = Math.floor(secs / 3600), // how many hours do the seconds make up?
+        minutes = Math.floor(secs % 3600 / 60), // how many minutes do the seconds make up?
+        seconds = Math.ceil(secs % 3600 % 60); // get the exact second, rounding up decimals
     return ( // return a string of the formatted time
       hours === 0 ? // if the seconds don't make up an hour or more
         (minutes === 60) // if the minutes are up to 60
@@ -211,6 +219,12 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
     }, 500); // remove flag if scrolling hasn't fired again after half a second
   };
 
+  this.setupSong = ()=> { // to update player volume and song duration once song loads
+    $song_duration.text(this.echoTime(audio.duration)); // update the duration of the current song
+    $scrubber.find('div').height(audio.volume * 100 + '%'); // update view with current song volume
+    this.lastVolumeValue = audio.volume; // use the current volume as the unmute volume
+  };
+
   this.skip = () => { // to go to the next song
     if ($tracker.hasClass('forward') === false) { // if player is not fast forwarding (no flag is set)
       if (this.tracking) clearTimeout(this.tracking); // clear fast forwarding timeout before flag is set
@@ -229,6 +243,12 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
     $audio_player.find('.tracker:not(.read-only)').addClass('tracking'); // indicate manual tracking on progress circle (set flag)
     $audio_player.find('.tracker:not(.read-only) .progresscircle').trigger('configure', { "fgColor":"#d05000" }); // change color of progress circle to dark orange
   };
+
+  this.updateTime = ()=> { // to update the time tracker on the fly as long as there is no user input
+    if ($tracker.hasClass('scrolling') === false && $tracker.hasClass('tracking') === false) // if user is not scrolling or tracking the time knob (no flag is set)
+      $tracker.find('.progresscircle').val((audio.currentTime / audio.duration) * 100).trigger('change'); // set the value of the time knob based on current time
+    $current_time.text(this.echoTime(audio.currentTime, audio.duration)); // update the current time
+  }
 },
 
 List = songs => { // sets up the song list using data from soundcloud api
