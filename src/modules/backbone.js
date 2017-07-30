@@ -31,7 +31,8 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
     if (eType === 'end') $scrubber.removeClass('scrubbing'); // indicate volume adjuster no longer scrubbing (remove flag)
     if ($scrubber.hasClass('scrubbing')) { // adjust song volume if flag is set
       e	= touch ? e.originalEvent.touches[0] : e; // mouse or touch event?
-      audio.volume = Math.abs((e.pageY - ($scrubber.offset().top + $scrubber.height())) / $scrubber.height()); // adjust the volume according to where the cursor is dragged over the scrubber
+      let value = Math.abs((e.pageY - ($scrubber.offset().top + $scrubber.height())) / $scrubber.height()); // value derived from where the cursor/finger is dragged over the scrubber
+      audio.volume = value > 1 ? 1 : value < 0 ? 0 : value; // adjust the volume according to value, assuring value is within the range [0, 1]
     }
   };
 
@@ -244,7 +245,7 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
     $audio_player.find('.tracker:not(.read-only) .progresscircle').trigger('configure', { "fgColor":"#d05000" }); // change color of progress circle to dark orange
   };
 
-  this.updateTime = ()=> { // to update the time tracker on the fly as long as there is no user input
+  this.updateTime = () => { // to update the time tracker on the fly as long as there is no user input
     if ($tracker.hasClass('scrolling') === false && $tracker.hasClass('tracking') === false) // if user is not scrolling or tracking the time knob (no flag is set)
       $tracker.find('.progresscircle').val((audio.currentTime / audio.duration) * 100).trigger('change'); // set the value of the time knob based on current time
     $current_time.text(this.echoTime(audio.currentTime, audio.duration)); // update the current time
@@ -265,4 +266,4 @@ List = songs => { // sets up the song list using data from soundcloud api
   });
 };
 
-export { AudioPlayer, List };
+export { AudioPlayer };
