@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 
 import { AudioPlayer } from './modules/backbone';
-import { AudioAudible, AudioMuted, PlayControl, PauseControl, PrevControl, NextControl, Tracker, VolumeScrubber } from './components/AudioPlayer';
+import AudioComponent from './components/AudioPlayer';
 import { Navigator } from './components/Navigator';
 import './modules/knob';
 
@@ -22,6 +22,7 @@ class App extends Component {
       .on('click', '.audio-player .next', player.skip) // when the next button is clicked, skip forward
       .on('click', '.audio-player .prev', player.recur) // when the prev button is clicked, skip backward
       .on('click', '.audio-player .prev', player.recur) // when the prev button is clicked, skip backward
+      .on('click', '.audio-player .volume .icon', player.mute) // when the volume icon is clicked, toggle mute
       .on('click', '.menu-icon', ()=>{
         $('.App').toggleClass('explore')
       })
@@ -30,7 +31,7 @@ class App extends Component {
       .on(touch ? 'touchstart' : 'mousedown', '.tracker:not(.read-only) canvas', player.track) // when the progress circle is pressed, start tracking
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'start')) // when the volume scrubber is clicked, adjust volume
       .on(touch ? 'touchmove' : 'mousemove', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'move')) // when the volume scrubber is dragged, adjust volume
-      .on(touch ? 'touchend touchcancel' : 'mouseup', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'end')) // when the volume scrubber is released, stop adjusting volume
+      .on(touch ? 'touchend touchcancel' : 'mouseup mouseleave', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'end')) // when the volume scrubber is released, stop adjusting volume
       .on('touchend', '.audio-player .prev, .audio-player .next', player.continue) // stop fast forward/rewind on mobile
       .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', player.scroll) // when progress circle is scrolled, start scrolling
       .on('keydown', player.detectKey) // when a keystroke is started
@@ -50,15 +51,7 @@ class App extends Component {
         <audio className="player"></audio>
         <div className="container">
           <div className="monolith"></div>
-          <div className="major audio-player">
-            <Tracker /><Tracker readOnly="true" />
-            <PrevControl /><PlayControl /><PauseControl /><NextControl />
-            <div className="current time"><span>--:--</span></div>
-            <div className="time duration"><span>--:--</span></div>
-             <div className="title mono"><marquee><span></span></marquee></div>
-             <div className="title mini">Now playing: <span>loading songs...</span></div>
-             <div className="volume"><AudioAudible /><AudioMuted /><VolumeScrubber /></div>
-          </div>
+          <AudioComponent name="major" />
           {/* <div className="search-form">
             <form action="#">
               <input className="search-field" placeholder="search for music..."></input>

@@ -1,6 +1,47 @@
 import React, { Component } from 'react';
 
-export class AudioAudible extends Component { // volume icon audible
+export default class AudioPlayer extends Component { // volume scrubber
+  render() {
+    const player = this.props.name;
+
+    let navControls,
+        progressControl,
+        title,
+        volumeIcon;
+    if (player === "major"){
+        navControls = [<PrevControl />, <PlayControl />, <PauseControl />, <NextControl />];
+        progressControl = [<Tracker />, <Tracker readOnly="true" />];
+        title = [
+            <div className="title mono"><marquee><span></span></marquee></div>,
+            <div className="title mini">Now playing: <span>loading songs...</span></div>
+        ];
+        volumeIcon = [<AudioAudible />, <AudioMuted />];
+    } else {
+        navControls = [
+            <div className="prev control"><a>prev</a></div>,
+            <div className="playpause control"><a>Play</a></div>,
+            <div className="next control"><a>next</a></div>
+        ];
+        progressControl = <div className="progress-bar"><div className="played"></div></div>
+        volumeIcon = <div className="icon"><a>Volume</a></div>
+    }
+    return (
+        <div className={ `${this.props.name ? this.props.name + ' ' : ''}audio-player` }>
+            { progressControl } 
+            { navControls }
+            <div className="current time"><span>--:--</span></div>
+            <div className="time duration"><span>--:--</span></div>
+            { title }
+            <div className="volume control">
+                { volumeIcon } 
+                <VolumeScrubber />
+            </div>
+        </div>
+    );
+  }
+}
+
+class AudioAudible extends Component { // volume icon audible
   render() {
     return (
         <div className="icon audible">
@@ -67,7 +108,7 @@ export class AudioAudible extends Component { // volume icon audible
   }
 }
 
-export class AudioMuted extends Component { // volume icon muted
+class AudioMuted extends Component { // volume icon muted
   render() {
     return (
         <div className="icon muted">
@@ -111,7 +152,7 @@ export class AudioMuted extends Component { // volume icon muted
   }
 }
 
-export class NextControl extends Component { // forward button large
+class NextControl extends Component { // forward button large
   render() {
     return (
         <div className="next control">
@@ -135,7 +176,7 @@ export class NextControl extends Component { // forward button large
   }
 }
 
-export class PauseControl extends Component { // pause button large
+class PauseControl extends Component { // pause button large
   render() {
     return (
         <div className="pause control">
@@ -157,7 +198,7 @@ export class PauseControl extends Component { // pause button large
   }
 }
 
-export class PlayControl extends Component { // play button large
+class PlayControl extends Component { // play button large
   render() {
     return (
         <div className="play control">
@@ -179,7 +220,7 @@ export class PlayControl extends Component { // play button large
   }
 }
 
-export class PrevControl extends Component { // back button large
+class PrevControl extends Component { // back button large
   render() {
     return (
         <div className="prev control">
@@ -210,17 +251,17 @@ export class PrevControl extends Component { // back button large
   }
 }
 
-export class Tracker extends Component { // back button large
+class Tracker extends Component { // back button large
   render() {
     return (
-        <div className={ `tracker ${this.props.readOnly ? 'read-only' : ''}` }>
+        <div className={ `tracker${this.props.readOnly ? ' read-only' : ''}` }>
             <input className="progresscircle" />
         </div>
     );
   }
 }
 
-export class VolumeScrubber extends Component { // volume scrubber
+class VolumeScrubber extends Component { // volume scrubber
   render() {
     return (
         <div className="scrubber"><div><div></div></div></div>
