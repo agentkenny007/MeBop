@@ -21,8 +21,8 @@ class App extends Component {
       .on('click', '.audio-player .next', player.skip) // when the next button is clicked, skip forward
       .on('click', '.audio-player .prev', player.recur) // when the prev button is clicked, skip backward
       .on('click', '.audio-player .volume .icon', player.mute) // when the volume icon is clicked, toggle mute
-      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => { player.press('forward', 1) }) // when the next button is pressed, try fast forwarding in 1% increments
-      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => { player.press('backward', 1) }) // when the prev button is pressed, try rewinding in 1% decrements
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => player.press('forward', 1)) // when the next button is pressed, try fast forwarding in 1% increments
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => player.press('backward', 1)) // when the prev button is pressed, try rewinding in 1% decrements
       .on(touch ? 'touchstart' : 'mousedown', '.tracker:not(.read-only) canvas', player.track) // when the progress circle is pressed, start tracking
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'start')) // when the volume scrubber is clicked, adjust volume
       .on(touch ? 'touchmove' : 'mousemove', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'move')) // when the volume scrubber is dragged, adjust volume
@@ -55,6 +55,7 @@ class App extends Component {
              <div className="title mini">Now playing: <span>loading songs...</span></div>
              <div className="volume"><AudioAudible /><AudioMuted /><VolumeScrubber /></div>
           </div>
+          <div className="menu-icon"><span></span></div>
           {/* <div className="search-form">
             <form action="#">
               <input className="search-field" placeholder="search for music..."></input>
