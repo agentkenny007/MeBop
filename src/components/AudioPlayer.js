@@ -9,18 +9,22 @@ export default class AudioPlayer extends Component { // volume scrubber
         title,
         volumeIcon;
     if (player === "major"){
-        navControls = [<PrevControl />, <PlayControl />, <PauseControl />, <NextControl />];
-        progressControl = [<Tracker />, <Tracker readOnly="true" />];
+        navControls = [
+            <PrevControl key={0} />,
+            <PlayControl key={1} />,
+            <PauseControl key={2} />,
+            <NextControl key={3} />];
+        progressControl = [<Tracker key={0} />, <Tracker key={1} readOnly="true" />];
         title = [
-            <div className="title mono"><marquee><span></span></marquee></div>,
-            <div className="title mini">Now playing: <span>loading songs...</span></div>
+            <div key={0} className="title mono"><marquee><span></span></marquee></div>,
+            <div key={1} className="title mini">Now playing: <span>loading songs...</span></div>
         ];
-        volumeIcon = [<AudioAudible />, <AudioMuted />];
+        volumeIcon = [<AudioAudible key={0} />, <AudioMuted key={1} />];
     } else {
         navControls = [
-            <div className="prev control" title="Rewind/Replay/Previous Track"><a>prev</a></div>,
-            <div className="playpause control" title="Play Track"><a>Play</a></div>,
-            <div className="next control" title="Fast Forward/Skip Track"><a>next</a></div>
+            <div key={0} className="prev control" title="Rewind/Replay/Previous Track"><a>prev</a></div>,
+            <div key={1} className="playpause control" title="Play Track"><a>Play</a></div>,
+            <div key={2} className="next control" title="Fast Forward/Skip Track"><a>next</a></div>
         ];
         progressControl = <div className="progress-bar"><div className="played"></div></div>;
         title = <div className="mini title"><span>loading songs...</span></div>;
