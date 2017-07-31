@@ -53,11 +53,6 @@ class App extends Component {
         <div className="container">
           <div className="monolith"></div>
           <AudioComponent name="major" />
-          {/* <div className="search-form">
-            <form action="#">
-              <input className="search-field" placeholder="search for music..."></input>
-            </form>
-          </div> */}
           <div className="logo-icon"></div>
         </div>
         <div className="menu-icon"><span></span></div>

@@ -96,14 +96,19 @@
       right: 120px;
       top: 100px;
       bottom: 25px;
+      background: rgba(255, 255, 255, 0.015);
+      filter: drop-shadow(0px 0 10px rgba(84, 0, 0, 1));
+      box-shadow: inset -10px 0 20px rgba(84, 0, 0, 0.125);
+      border-right: 1px solid rgba(80, 0, 0, 0.25);
+      border-top-right-radius: 15px;
       &:after {
         content: '';
         position: absolute;
         display: block;
         bottom: 0;
         width: 100%;
-        height: 75px;
         filter: blur(1px);
+        height: 75px;
         border-radius: 0 0 2px 2px;
         background: -moz-linear-gradient(top, rgba(84,0,0,0) 0%, rgba(84,0,0,1) 100%);
         background: -webkit-linear-gradient(top, rgba(84,0,0,0) 0%,rgba(84,0,0,1) 100%);
@@ -119,10 +124,37 @@
         height: 50px;
         filter: blur(1px);
         border-radius: 2px 2px 0 0;
+        opacity: 0;
         background: -moz-linear-gradient(top, rgba(84,0,0,1) 0%, rgba(84,0,0,0) 100%);
         background: -webkit-linear-gradient(top, rgba(84,0,0,1) 0%,rgba(84,0,0,0) 100%);
         background: linear-gradient(to bottom, rgba(84,0,0,1) 0%,rgba(84,0,0,0) 100%);
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#540000', endColorstr='#00540000',GradientType=0 );
+      }
+    }
+    .widget {
+      position: fixed;
+      &.search {
+        left: 350px;
+        top: 80px;
+        right: 120px;
+        .search-field { border-radius: 4px 0 0 4px; }
+        .artist-field { border-radius: 0 4px 4px 0; }
+        input {
+          font-size: 2em;
+          text-align: center;
+          border: 1px solid rgba(0, 0, 0, 0.45);
+          padding-bottom: 4px;
+          box-sizing: border-box;
+          font-family: Raleway;
+          width: 5%;
+          outline: 0;
+          box-shadow: 0 6px 7px -1px rgba(20, 0, 0, 0.67);
+          transition: all 0.5s ease, width 3.45s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+          background: rgba(255, 255, 255, 0.85);
+          &:hover { background: rgba(255, 255, 255, 0.95); }
+          &:focus { color: white; background: rgba(0, 0, 0, 0.85); border-color: rgba(255, 255, 255, 0.645); }
+          &:focus:hover { background: rgba(0, 0, 0, 0.95); }
+        }
       }
     }
   }
@@ -181,6 +213,11 @@
       .menu {
         transition-delay: 1.85s;
         transform: perspective(2000px) translate3d(0, 0, 0) rotateY(0deg);        
+      }
+      .widget {
+        &.search {
+          input { width: 45%; }
+        }
       }
     }
   }
