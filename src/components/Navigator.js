@@ -8,7 +8,7 @@ export class Navigator extends Component { // menu navigator
             <AudioPlayer name="minor" />
             <Menu />
             <Lunette />
-            <Widget name="search" content={<SearchForm fields={["artist"]} />} />
+            <Widget name="search" content={<SearchForm type="simple" />} />
         </div>
     );
   }
@@ -44,12 +44,22 @@ class Widget extends Component {
 
 class SearchForm extends Component {
   render() {
-    let fields = this.props.fields;
-    if (fields && fields.length) fields = fields.map(field => <input className={`${field}-field`}  placeholder={`add ${field}...?`}></input>)
+    let defaults = [<input className="search-field" placeholder="search for song..."></input>],
+        fields = this.props.fields,
+        type = this.props.type;
+
+    if (fields && fields.length) fields = fields.map(field => <input className={`${field}-field filter`}  placeholder={`add ${field}...`}></input>)
+    else if (type)
+      switch (type) {
+        case "simple" : defaults.push(<input className="artist-field" placeholder="add artist...?"></input>)
+          break;
+      
+        default: break;
+      };
     
     return (
-      <form className="search-form">
-        <input className="search-field" placeholder="search for song..."></input>
+      <form className={`${type?type+' ':''}search-form`}>
+        { defaults }
         { fields }
       </form>
     );
