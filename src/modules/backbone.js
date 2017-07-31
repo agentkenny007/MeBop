@@ -9,10 +9,11 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
   let audio = $('audio')[0], // the primary audio element
       $audio_player = $('.audio-player'), // the audio player
       $current_time = $audio_player.find('.current.time span'), // the audio player song current time field
+      $progress_bar = $audio_player.find('.progress-bar'), // the audio player progress tracker (bar)
       $scrubber = $('.scrubber > div'), // the audio player volume scrubber
       $song_duration = $audio_player.find('.duration span'), // the audio player song duration field
       $song_volume = $audio_player.find('.volume'), // the audio player volume control
-      $tracker = $('.tracker'); // the audio player progress tracker
+      $tracker = $('.tracker'); // the audio player progress tracker (knob)
   this.lastTrackedValue = 0; // to record time of song when paused
   this.lastVolumeValue = 1; // to record volume of song when muted
   this.nowPlaying = 0; // the index of currently playing song
@@ -26,12 +27,23 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
   audio.addEventListener('timeupdate', ()=>{ this.updateTime() }); // update view with time of song
   audio.addEventListener('volumechange', ()=>{ this.changeVolume() }); // update view with song volume
 
+  this.adjustTime = (e, eType) => { // to adjust the song's current time
+    if (eType === 'start' && !$progress_bar.hasClass('tracking')) $progress_bar.addClass('tracking'); // indicate manual tracking on progress bar (set flag)
+    if (eType === 'end') $progress_bar.removeClass('tracking'); // indicate progress bar tracking release (remove flag)
+    if ($progress_bar.hasClass('tracking')) {
+      e	= touch ? e.originalEvent.touches[0] : e; // mouse or touch event?
+      let value =  Math.round((audio.duration * (e.pageX - $progress_bar.offset().left)) / $progress_bar[0].clientWidth);
+			if (value) audio.currentTime = value;      
+    }
+  };
+ 
   this.adjustVolume = (e, eType) => { // to adjust the songs volume
     if (eType === 'start' && !$scrubber.hasClass('scrubbing')) $scrubber.addClass('scrubbing'); // indicate a scrubbing volume adjuster (set flag)
-    if (eType === 'end') $scrubber.removeClass('scrubbing'); // indicate volume adjuster no longer scrubbing (remove flag)
+    if (eType === 'end') $scrubber.removeClass('scrubbing'); // indicate volume adjuster scrubbing release (remove flag)
     if ($scrubber.hasClass('scrubbing')) { // adjust song volume if flag is set
       e	= touch ? e.originalEvent.touches[0] : e; // mouse or touch event?
-      let value = Math.abs((e.pageY - ($scrubber.offset().top + $scrubber.height())) / $scrubber.height()); // value derived from where the cursor/finger is dragged over the scrubber
+      const $SCRUBBER = $(e.target).closest('.scrubber > div'); // get the right scrubber
+      let value = Math.abs((e.pageY - ($SCRUBBER.offset().top + $SCRUBBER[0].clientHeight)) / $SCRUBBER[0].clientHeight); // value derived from where the cursor/finger is dragged over the scrubber
       audio.volume = value > 1 ? 1 : value < 0 ? 0 : value; // adjust the volume according to value, assuring value is within the range [0, 1]
     }
   };
@@ -116,13 +128,13 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
         "lineCap": "round",
         "step": 0.5, "angleOffset": 180, "thickness": 0.05,
         'change': value => { // when circle value is changed (manual tracking)
-          audio.currentTime = Math.round(audio.duration * value / 100); // update time according to given value (%)
+          if (Number(value)) audio.currentTime = Math.round(audio.duration * value / 100); // update time according to given numeric value (%)
         },
         'release': value => { // when circle is released (on scroll)
           if ($tracker.hasClass('tracking')) { // circle is being tracked manually (flag is set)
             $tracker.removeClass('tracking') // remove manual tracking flag
               .find('.progresscircle').trigger('configure', { "fgColor":"#FFF28C" }); // reset circle to primary colour
-          } else if ($tracker.hasClass('scrolling')) // circle is being scrolled (flag is set)
+          } else if ($tracker.hasClass('scrolling') && Number(value)) // circle is being scrolled (flag is set), value is numeric
             audio.currentTime = Math.round(audio.duration * value / 100); // update time according to value given (%)
         }
     });
@@ -187,6 +199,16 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
     }
   };
 
+  this.playOrPause = () => {
+    if ($audio_player.hasClass('playing')){ // if audio player is playing (flag is set)
+      $audio_player.find('.playpause').attr("title", 'Play Track' ).find('a').html('Play'); // update DOM
+      this.pause(); // play song
+    } else {
+      $audio_player.find('.playpause').attr("title", 'Pause Track' ).find('a').html('Pause'); // update DOM
+      this.play();
+    }
+  };
+
   this.press = (control, percentage) => { // to start fast forward or rewind (by the given percentage) when respective control is pressed and held
     if (this.tracking) clearTimeout(this.tracking); // clear fast forward or rewind timeout
     this.tracking = setTimeout(()=>{ // set/reset timeout to begin fast forward/rewind
@@ -246,8 +268,11 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
   };
 
   this.updateTime = () => { // to update the time tracker on the fly as long as there is no user input
+    let percentPlayed = (audio.currentTime / audio.duration) * 100; // calculate percent of song played based on current time and song duration
     if ($tracker.hasClass('scrolling') === false && $tracker.hasClass('tracking') === false) // if user is not scrolling or tracking the time knob (no flag is set)
-      $tracker.find('.progresscircle').val((audio.currentTime / audio.duration) * 100).trigger('change'); // set the value of the time knob based on current time
+      $tracker.find('.progresscircle').val(percentPlayed).trigger('change'); // set the value of the time knob based on percent played
+    // if ($progress_bar.hasClass('tracking') === false) // if user is not tracking the progress bar (no flag is set)
+      $audio_player.find('.played').width(percentPlayed + '%'); // update the width of the progress bar based on percent played
     $current_time.text(this.echoTime(audio.currentTime, audio.duration)); // update the current time
   }
 },

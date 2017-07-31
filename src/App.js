@@ -18,21 +18,23 @@ class App extends Component {
 
     $(document) // register live events
       .on('click', '.audio-player .play', player.play) // when the play button is clicked, play
+      .on('click', '.audio-player .playpause', player.playOrPause) // when the playpause button is clicked, toggle play or pause
       .on('click', '.audio-player .pause', player.pause) // when the pause button is clicked, pause
       .on('click', '.audio-player .next', player.skip) // when the next button is clicked, skip forward
       .on('click', '.audio-player .prev', player.recur) // when the prev button is clicked, skip backward
       .on('click', '.audio-player .prev', player.recur) // when the prev button is clicked, skip backward
       .on('click', '.audio-player .volume .icon', player.mute) // when the volume icon is clicked, toggle mute
-      .on('click', '.menu-icon', ()=>{
-        $('.App').toggleClass('explore')
-      })
+      .on('click', '.menu-icon', ()=>{ $('.App').toggleClass('explore') }) // when the menu icon is clicked, open the navigator
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => player.press('forward', 1)) // when the next button is pressed, try fast forwarding in 1% increments
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => player.press('backward', 1)) // when the prev button is pressed, try rewinding in 1% decrements
       .on(touch ? 'touchstart' : 'mousedown', '.tracker:not(.read-only) canvas', player.track) // when the progress circle is pressed, start tracking
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'start')) // when the volume scrubber is clicked, adjust volume
-      .on(touch ? 'touchmove' : 'mousemove', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'move')) // when the volume scrubber is dragged, adjust volume
-      .on(touch ? 'touchend touchcancel' : 'mouseup mouseleave', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'end')) // when the volume scrubber is released, stop adjusting volume
-      .on('touchend', '.audio-player .prev, .audio-player .next', player.continue) // stop fast forward/rewind on mobile
+      .on(touch ? 'touchmove' : 'mousemove', '.audio-player .scrubber', e => player.adjustVolume(e, 'move')) // when the volume scrubber is dragged, adjust volume
+      .on(touch ? 'touchend touchcancel' : 'mouseup mouseleave', '.audio-player .scrubber', e => player.adjustVolume(e, 'end')) // when the volume scrubber is released, stop adjusting volume
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .progress-bar', e => player.adjustTime(e, 'start')) // when the volume scrubber is clicked, adjust volume
+      .on(touch ? 'touchmove' : 'mousemove', '.audio-player.minor', e => player.adjustTime(e, 'move')) // when the volume scrubber is dragged, adjust volume
+      .on(touch ? 'touchend touchcancel' : 'mouseup mouseleave', '.audio-player.minor', e => player.adjustTime(e, 'end')) // when the volume scrubber is released, stop adjusting volume
+      .on(touch ? 'touchend' : 'mouseleave', '.audio-player .prev, .audio-player .next', player.continue) // stop fast forward/rewind on mobile
       .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', player.scroll) // when progress circle is scrolled, start scrolling
       .on('keydown', player.detectKey) // when a keystroke is started
       .on('keyup', player.collectKey) // when a keystroke is fired

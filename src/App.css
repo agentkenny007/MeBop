@@ -142,7 +142,8 @@ body {
     border: 1px solid;
     border-right: 2px solid;
     border-left: 2px solid;
-    background: white;
+    border-radius: 4px 4px 0 0;
+    background: rgba(255, 255, 255, 0.165);
     transform: perspective(1500px) rotateX(40deg);
     transition: all 1s ease, transform 1.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     filter: drop-shadow(0 30px 10px rgba(60, 0, 0, 0.4));
@@ -159,26 +160,30 @@ body {
       .audio-player.minor .playpause a {
         border: 0.75em solid transparent;
         border-right: none;
-        border-left-color: #A83418;
+        border-left-color: #fff;
         position: absolute;
         top: 50%;
         left: 50%;
         margin: -0.75em 0 0 -0.375em; }
     .audio-player.minor .prev {
-      font-size: 25px;
+      font-size: 35px;
       width: 30px; }
       .audio-player.minor .prev:after {
         content: '‹';
-        content: '«';
-        color: #A83418; }
+        color: #fff;
+        font-family: Josefin Sans; }
+      .audio-player.minor .prev:active:after {
+        content: '«'; }
     .audio-player.minor .next {
-      font-size: 25px;
+      font-size: 35px;
       width: 30px;
       left: 80px; }
       .audio-player.minor .next:after {
         content: '›';
-        content: '»';
-        color: #A83418; }
+        color: #fff;
+        font-family: Josefin Sans; }
+      .audio-player.minor .next:active:after {
+        content: '»'; }
     .audio-player.minor .progress-bar {
       position: absolute;
       left: 120px;
@@ -186,13 +191,13 @@ body {
       height: 4px;
       top: 50%;
       margin-top: -2px;
-      background: rgba(119, 45, 4, 0.5);
+      background: rgba(255, 255, 255, 0.425);
       border-radius: 5px;
       cursor: pointer; }
       .audio-player.minor .progress-bar .played {
-        width: 50%;
+        width: 0;
         height: 100%;
-        background: #A83418;
+        background: #fff;
         border-radius: 5px;
         position: relative; }
         .audio-player.minor .progress-bar .played:after {
@@ -200,18 +205,25 @@ body {
           display: block;
           width: 10px;
           height: 10px;
-          background-color: #A83418;
+          background-color: #fff;
           position: absolute;
           right: 0;
           top: -3px;
           border-radius: 50%; }
     .audio-player.minor .time {
       position: absolute;
-      bottom: 5px; }
+      bottom: 5px;
+      color: white;
+      font-family: Josefin Sans; }
       .audio-player.minor .time.current {
         left: 120px; }
       .audio-player.minor .time.duration {
         right: 50px; }
+    .audio-player.minor .title {
+      color: white;
+      font-family: Raleway;
+      position: relative;
+      top: 36px; }
     .audio-player.minor .volume {
       right: 0;
       width: 50px; }
@@ -224,41 +236,43 @@ body {
         position: absolute;
         left: 0;
         right: -1px;
-        top: -9999px;
+        visibility: hidden;
         width: 50px;
-        background: white;
+        background: rgba(255, 255, 255, 0.165);
         opacity: 0;
-        transition: opacity 0.7s cubic-bezier(0.86, 0, 0.07, 1);
+        border-radius: 0 0 4px 4px;
+        transition: opacity 0.7s cubic-bezier(0.86, 0, 0.07, 1), visibility 0.7s, background 1s ease;
+        transition-delay: 0s, 0.7s, 0s;
         z-index: 1; }
         .audio-player.minor .volume .scrubber > div {
           position: absolute;
           left: 50%;
-          margin-left: -2px;
+          margin: 7px -2px;
           width: 4px;
           height: 90%;
-          background: rgba(119, 45, 4, 0.35);
+          background: rgba(255, 255, 255, 0.435);
           border-radius: 5px; }
           .audio-player.minor .volume .scrubber > div div {
             position: absolute;
             bottom: 0;
             width: 100%;
-            background: #A83418;
+            background: #fff;
             border-radius: 5px; }
             .audio-player.minor .volume .scrubber > div div:after {
               content: '';
               display: block;
               width: 10px;
               height: 10px;
-              background-color: #A83418;
+              background-color: #fff;
               position: absolute;
-              top: 0;
+              top: -5px;
               left: -3px;
               border-radius: 50%; }
       .audio-player.minor .volume a {
         position: relative;
         width: 0.313em;
         height: 0.375em;
-        background-color: #A83418;
+        background-color: #fff;
         z-index: 1;
         top: 45%;
         left: 35%;
@@ -271,7 +285,7 @@ body {
           height: 0;
           border: 0.5em solid transparent;
           border-left: none;
-          border-right-color: #A83418;
+          border-right-color: #fff;
           z-index: 2;
           top: 50%;
           right: -0.25em;
@@ -281,14 +295,14 @@ body {
           content: '';
           width: 0.313em;
           height: 0.313em;
-          border: 0.25em double #A83418;
+          border: 0.25em double #fff;
           border-width: 0.25em 0.25em 0 0;
           left: 0.563em;
           top: -0.063em;
           border-radius: 0 0.938em 0 0;
           transform: rotate(45deg); }
       .audio-player.minor .volume:hover .scrubber {
-        top: auto;
+        visibility: visible;
         opacity: 1; }
     .audio-player.minor a {
       display: block;
@@ -302,17 +316,64 @@ body {
       width: 100%;
       height: 12px;
       top: 100%;
-      background: rgba(255, 255, 255, 0.45);
+      background: rgba(55, 0, 0, 0.45);
       transition: transform 1.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      transform: perspective(2000px) rotateX(-40deg); }
+      transform: perspective(2000px) rotateX(-40deg);
+      border-radius: 0 0 4px 4px; }
     .audio-player.minor:hover {
       transform: perspective(1500px) rotateX(0deg);
       left: 10px;
       right: 10px;
-      border: none; }
+      border: none;
+      background: rgba(255, 255, 255, 0.95); }
+      .audio-player.minor:hover .control a {
+        border-left-color: #A83418; }
+      .audio-player.minor:hover .control:before, .audio-player.minor:hover .control:after {
+        color: #A83418; }
+      .audio-player.minor:hover .progress-bar {
+        background: rgba(119, 45, 4, 0.5); }
+        .audio-player.minor:hover .progress-bar .played {
+          background: #A83418; }
+          .audio-player.minor:hover .progress-bar .played:after {
+            background-color: #A83418; }
+      .audio-player.minor:hover .time, .audio-player.minor:hover .title {
+        color: #A83418; }
+      .audio-player.minor:hover .volume .scrubber {
+        background: rgba(255, 255, 255, 0.95); }
+        .audio-player.minor:hover .volume .scrubber > div {
+          background: rgba(119, 45, 4, 0.35); }
+          .audio-player.minor:hover .volume .scrubber > div div {
+            background: #A83418; }
+            .audio-player.minor:hover .volume .scrubber > div div:after {
+              background-color: #A83418; }
+      .audio-player.minor:hover .volume a {
+        background-color: #A83418; }
+        .audio-player.minor:hover .volume a:before {
+          border-right-color: #A83418; }
+        .audio-player.minor:hover .volume a:after {
+          border-color: #A83418; }
       .audio-player.minor:hover:after {
         height: 9px;
-        transform: rotateX(0deg); }
+        transform: rotateX(0deg);
+        background: rgba(255, 255, 255, 0.45); }
+    .audio-player.minor.playing .playpause a {
+      border: 0;
+      width: 20px;
+      height: 20px;
+      margin: -0.5em 0 0 -0.625em; }
+      .audio-player.minor.playing .playpause a:before {
+        left: 0; }
+      .audio-player.minor.playing .playpause a:after {
+        right: 0; }
+      .audio-player.minor.playing .playpause a:before, .audio-player.minor.playing .playpause a:after {
+        position: absolute;
+        content: '';
+        top: 0;
+        width: 40%;
+        height: 100%;
+        background-color: #fff; }
+    .audio-player.minor.playing:hover .playpause a:before, .audio-player.minor.playing:hover .playpause a:after {
+      background-color: #A83418; }
   .audio-player.major {
     transition: all 0.967s ease;
     width: 100%;
@@ -423,7 +484,8 @@ body {
         transition: opacity 0.695s, transform 0.575s ease; }
         .audio-player.major .volume .icon.audible {
           left: 0;
-          opacity: 1; }
+          opacity: 1;
+          z-index: 1; }
         .audio-player.major .volume .icon.muted {
           left: -2px;
           opacity: 0; }
@@ -463,7 +525,8 @@ body {
             background: linear-gradient(to bottom, #e3581a 0%, #ffca4e 100%);
             filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e3581a', endColorstr='#ffca4e',GradientType=0 ); }
       .audio-player.major .volume.mute .icon.audible {
-        opacity: 0; }
+        opacity: 0;
+        z-index: 0; }
       .audio-player.major .volume.mute .icon.muted {
         opacity: 1; }
       .audio-player.major .volume.mute .scrubber > div div {
