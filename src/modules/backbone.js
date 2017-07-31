@@ -199,13 +199,13 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
     }
   };
 
-  this.playOrPause = () => {
+  this.playOrPause = () => { // to play/pause the audio player
     if ($audio_player.hasClass('playing')){ // if audio player is playing (flag is set)
-      $audio_player.find('.playpause').attr("title", 'Play Track' ).find('a').html('Play'); // update DOM
-      this.pause(); // play song
+      $audio_player.find('.playpause').attr("title", 'Play Track').find('a').html('Play'); // update DOM
+      this.pause(); // pause song
     } else {
-      $audio_player.find('.playpause').attr("title", 'Pause Track' ).find('a').html('Pause'); // update DOM
-      this.play();
+      $audio_player.find('.playpause').attr("title", 'Pause Track').find('a').html('Pause'); // update DOM
+      this.play(); // play song
     }
   };
 
