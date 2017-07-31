@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import ID from './cred';
 import findSongs from './soundcloud';
+import './knob';
 
 let touch = 'ontouchstart' in window, // detect touchable document
     size = Math.round($(window).width() * 0.78), // calculate 78% of window width (for progress circle dimensions)

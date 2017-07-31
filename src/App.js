@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import React, { Component } from 'react';
 import './App.css';
 
@@ -6,7 +5,6 @@ import AudioComponent from './components/AudioPlayer';
 import Backbone from './modules/backbone';
 import Navigator from './components/Navigator';
 import { Filters } from './components/misc';
-import './modules/knob';
 
 let bone = new Backbone(); // the backbone runs the app
 
@@ -20,11 +18,11 @@ class App extends Component {
       <div className="App">
         <audio className="player" />
         <div className="container">
-          <div className="monolith"></div>
+          <div className="monolith" />
           <AudioComponent name="major" />
-          <div className="logo-icon"></div>
+          <div className="logo-icon" />
         </div>
-        <div className="menu-icon"><span></span></div>
+        <div className="menu-icon"><span /></div>
         <Navigator /><Filters />
       </div>
     );
