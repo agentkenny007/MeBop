@@ -84,33 +84,6 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
     }
   };
 
-  this.echoTime = (secs, duration) => { // to get a time string based on the given seconds and duration
-    let hours = Math.floor(secs / 3600), // how many hours do the seconds make up?
-        minutes = Math.floor(secs % 3600 / 60), // how many minutes do the seconds make up?
-        seconds = Math.ceil(secs % 3600 % 60); // get the exact second, rounding up decimals
-    return ( // return a string of the formatted time
-      hours === 0 ? // if the seconds don't make up an hour or more
-        (minutes === 60) // if the minutes are up to 60
-        || (seconds === 60 && minutes === 59) ? // or the seconds are up to 60 while minutes are still floored to 59
-          '01:' : // create the hours field displaying the first hour
-        duration >= 3600 ? '00:' : // create the hours field void if duration is over an hour
-        '' : // don't create the hours field if duration is under an hour 
-      hours > 0 && hours.toString().length < 2 ? '0' + hours + ':' : // create the hours field; add a '0' before the hour if under 10 hours
-      hours + ':' // create the hours field based on the number of hours
-    ) + (
-      seconds === 60 && minutes === 0 ? '01' : // if the seconds are up to 60 while minutes are still floored to 0, create the minutes field displaying the first minute        
-        minutes.toString().length < 2 ? '0' + minutes : // if under 10 minutes, add a '0' before the minute and create the minutes field
-          minutes === 60 // if the minutes are up to 60
-          || (seconds === 60 && minutes === 59) ? // or if the seconds are up to 60 while minutes are still floored to 59
-            '00' : // create the minutes field displaying '00' instead of '60' or '59'
-          minutes // create the minutes field based on the number of minutes
-    ) + ':' + ( // add mandatory colon
-      seconds.toString().length < 2 ? '0' + seconds : // create the seconds field; add a '0' before the second if under 10 seconds
-        seconds === 60 ? '00' : // if the seconds are up to 60, create seconds field displaying '00' instead of '60'
-        seconds // create the seconds field
-    );
-  };
-
   this.getSongs = () => // to get songs and populate the song list
     findSongs().then(songs => { // retrieve songs using soundcloud api
       this.songList = List(songs);console.log(this.songList) // map songs to songList array
@@ -281,7 +254,7 @@ List = songs => { // sets up the song list using data from soundcloud api
   return songs.map(song => { // remake song array to mirror db models
     return { // replace each object in the 'songs' array with this new object
       title: song.title, 
-      duration: song.duration,
+      duration: AudioPlayer.prototype.echoTime(song.duration / 1000),
       artwork: song.artwork_url || song.user.avatar_url,
       genre: song.genre,
       format: song.original_format,
@@ -289,6 +262,33 @@ List = songs => { // sets up the song list using data from soundcloud api
       link: song.permalink_url
     };
   });
+};
+
+AudioPlayer.prototype.echoTime = (secs, duration) => { // to get a time string based on the given seconds and duration
+  let hours = Math.floor(secs / 3600), // how many hours do the seconds make up?
+      minutes = Math.floor(secs % 3600 / 60), // how many minutes do the seconds make up?
+      seconds = Math.ceil(secs % 3600 % 60); // get the exact second, rounding up decimals
+  return ( // return a string of the formatted time
+    hours === 0 ? // if the seconds don't make up an hour or more
+      (minutes === 60) // if the minutes are up to 60
+      || (seconds === 60 && minutes === 59) ? // or the seconds are up to 60 while minutes are still floored to 59
+        '01:' : // create the hours field displaying the first hour
+      duration >= 3600 ? '00:' : // create the hours field void if duration is over an hour
+      '' : // don't create the hours field if duration is under an hour 
+    hours > 0 && hours.toString().length < 2 ? '0' + hours + ':' : // create the hours field; add a '0' before the hour if under 10 hours
+    hours + ':' // create the hours field based on the number of hours
+  ) + (
+    seconds === 60 && minutes === 0 ? '01' : // if the seconds are up to 60 while minutes are still floored to 0, create the minutes field displaying the first minute        
+      minutes.toString().length < 2 ? '0' + minutes : // if under 10 minutes, add a '0' before the minute and create the minutes field
+        minutes === 60 // if the minutes are up to 60
+        || (seconds === 60 && minutes === 59) ? // or if the seconds are up to 60 while minutes are still floored to 59
+          '00' : // create the minutes field displaying '00' instead of '60' or '59'
+        minutes // create the minutes field based on the number of minutes
+  ) + ':' + ( // add mandatory colon
+    seconds.toString().length < 2 ? '0' + seconds : // create the seconds field; add a '0' before the second if under 10 seconds
+      seconds === 60 ? '00' : // if the seconds are up to 60, create seconds field displaying '00' instead of '60'
+      seconds // create the seconds field
+  );
 };
 
 export { AudioPlayer };
