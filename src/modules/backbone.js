@@ -250,6 +250,44 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
   }
 },
 
+Bone = function() { // sets up the backbone (constructor function)
+  this.boot = () => { // to boot the app
+    let player = new AudioPlayer(), // audio player instance
+        init = () => { // init function
+          player.init(); // initialize audio player
+        };
+
+    $(document) // register live events
+      .on('click', '.audio-player .play', player.play) // when the play button is clicked, play
+      .on('click', '.audio-player .playpause', player.playOrPause) // when the playpause button is clicked, toggle play or pause
+      .on('click', '.audio-player .pause', player.pause) // when the pause button is clicked, pause
+      .on('click', '.audio-player .next', player.skip) // when the next button is clicked, skip forward
+      .on('click', '.audio-player .prev', player.recur) // when the prev button is clicked, skip backward
+      .on('click', '.audio-player .volume .icon', player.mute) // when the volume icon is clicked, toggle mute
+      .on('click', '.menu-icon', ()=>{ $('.App').toggleClass('explore') }) // when the menu icon is clicked, open the navigator
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => player.press('forward', 1)) // when the next button is pressed, try fast forwarding in 1% increments
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => player.press('backward', 1)) // when the prev button is pressed, try rewinding in 1% decrements
+      .on(touch ? 'touchstart' : 'mousedown', '.tracker:not(.read-only) canvas', player.track) // when the progress circle is pressed, start tracking
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'start')) // when the volume scrubber is clicked, adjust volume
+      .on(touch ? 'touchmove' : 'mousemove', '.audio-player .scrubber', e => player.adjustVolume(e, 'move')) // when the volume scrubber is dragged, adjust volume
+      .on(touch ? 'touchend touchcancel' : 'mouseup mouseleave', '.audio-player .scrubber', e => player.adjustVolume(e, 'end')) // when the volume scrubber is released, stop adjusting volume
+      .on(touch ? 'touchstart' : 'mousedown', '.audio-player .progress-bar', e => player.adjustTime(e, 'start')) // when the volume scrubber is clicked, adjust volume
+      .on(touch ? 'touchmove' : 'mousemove', '.audio-player.minor', e => player.adjustTime(e, 'move')) // when the volume scrubber is dragged, adjust volume
+      .on(touch ? 'touchend touchcancel' : 'mouseup mouseleave', '.audio-player.minor', e => player.adjustTime(e, 'end')) // when the volume scrubber is released, stop adjusting volume
+      .on(touch ? 'touchend' : 'mouseleave', '.audio-player .prev, .audio-player .next', player.continue) // stop fast forward/rewind on mobile
+      .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', player.scroll) // when progress circle is scrolled, start scrolling
+      .on('keydown', player.detectKey) // when a keystroke is started
+      .on('keyup', player.collectKey) // when a keystroke is fired
+      .on('submit', 'form', () => { return false; }) // do not refresh page on form submit
+      .ready(init); // when the document is ready, init
+    
+    $(window).resize(() => { // when the window is resized
+        let size = Math.round($(window).width() * 0.78); // calculate 78% of window width (for progress circle dimensions)        
+        $('.progresscircle').trigger('configure', { "width":size, "height":size, }); // set size of time tracker
+    });
+  }
+},
+
 List = songs => { // sets up the song list using data from soundcloud api
   return songs.map(song => { // remake song array to mirror db models
     return { // replace each object in the 'songs' array with this new object
@@ -291,4 +329,4 @@ AudioPlayer.prototype.echoTime = (secs, duration) => { // to get a time string b
   );
 };
 
-export { AudioPlayer };
+export default Bone;
