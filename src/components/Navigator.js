@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import AudioPlayer from './AudioPlayer';
 
-export class Navigator extends Component { // menu navigator
+export default class Navigator extends Component { // menu navigator
   render() {
     return (
         <div className="navigator">
@@ -56,12 +56,29 @@ class SearchForm extends Component {
   }
 }
 
-class SongList extends Component {
+class SongCard extends Component {
   render() {
-    let songs = this.props.songs;
+    let song = this.props.song;    
 
     return (
-      <div className="songs"><ul></ul></div>
+      <li>
+          <div className="song-card">
+              <div><img src={song.artwork} /><span className="play" data-stream={song.stream}></span></div>
+              <span className="title" title={song.title}>{song.title}</span>
+              <span className="duration">{song.duration}</span>
+          </div>
+      </li>
+    );
+  }
+}
+
+class SongList extends Component {
+  render() {
+    let songs = this.props.songs;    
+    songs = songs && songs.length ? songs.map((song, i) => <SongCard key={i} song={song} />) : [];
+
+    return (
+      <div className="songs"><ul>{ songs }</ul></div>
     );
   }
 }
