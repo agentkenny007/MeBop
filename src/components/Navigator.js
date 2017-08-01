@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import AudioPlayer from './AudioPlayer';
+import Backbone from '../modules/backbone';
 
 export default class Navigator extends Component { // menu navigator
   render() {
@@ -7,7 +8,7 @@ export default class Navigator extends Component { // menu navigator
         <div className="navigator">
             <AudioPlayer name="minor" />
             <Menu />
-            <Lunette content={<Widget name="songs" />} />
+            <Lunette content={<Widget name="songs" ref={ reference => Backbone.saveRef('song-widget', reference) } />} />
             <Widget name="search" />
         </div>
     );
@@ -18,7 +19,7 @@ class Lunette extends Component {
   render() {
     return (
       <div className="lunette">
-        { this.props.content || '' }
+        <div className="content">{ this.props.content || '' }</div>
       </div>
     );
   }
@@ -63,7 +64,7 @@ class SongCard extends Component {
     return (
       <li>
           <div className="song-card">
-              <div><img src={song.artwork} /><span className="play" data-stream={song.stream}></span></div>
+              <div><img src={song.artwork} alt={song.title} /><span className="play" data-stream={song.stream} /></div>
               <span className="title" title={song.title}>{song.title}</span>
               <span className="duration">{song.duration}</span>
           </div>
@@ -72,27 +73,41 @@ class SongCard extends Component {
   }
 }
 
-class SongList extends Component {
+export class SongList extends Component {
   render() {
     let songs = this.props.songs;    
     songs = songs && songs.length ? songs.map((song, i) => <SongCard key={i} song={song} />) : [];
 
     return (
-      <div className="songs"><ul>{ songs }</ul></div>
+      <div className="song-list"><ul>{ songs }</ul></div>
     );
   }
 }
 
 class Widget extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      content: this.props.content
+    };
+  }
+
+  place(compo) {
+    this.setState({ 
+      content: compo
+    });
+  }
+
   render() {
-    let content = this.props.content,
+    let content = this.state.content,
         name = this.props.name;
     if (name && !content)
       switch (name) {
         case "search" : content = <SearchForm type="simple" />;
           break;
         
-        case "songs" : content = <SongList />
+        case "songs" : content = <span className="void">No songs to show...</span>
           break;
       
         default: break;
