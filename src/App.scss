@@ -1,9 +1,24 @@
 @import url('https://fonts.googleapis.com/css?family=Bubbler+One|Bungee+Outline|Josefin+Sans|Julius+Sans+One|Lato|Poiret+One|Raleway');
 .App {
   text-align: center;
-  .container {
+  #filters { display: none; }
+  .face {
     transition: filter 0.675s;
     filter: blur(0);
+    .logo-icon {
+      width: 221px; height: 267px; background: url(images/logo.png) no-repeat; margin: auto;
+      position: absolute; bottom: 20%; left: 50%; margin-left: -110px; z-index: 1;
+      transition: transform .425s ease-in;
+    }
+    .logo-mono {
+      transition: all 0.375s ease;
+      transition-delay: 1.75s;
+      width: 634px; height: 151px; background: url(images/mebop.png) no-repeat;
+      margin: 3% auto 0;
+      &.hidden {
+        margin-top: -10%;
+      }
+    }
   }
   .menu-icon {
     position: fixed;
@@ -173,10 +188,17 @@
             box-sizing: border-box;
         }
       }
+      .void {
+        margin: 30px auto;
+        display: inline-block;
+        font: 30px Raleway;
+        color: white;
+        text-shadow: 0 1px 2px black;
+      }
     }
   }
   &.explore {
-    .container {
+    .face {
       filter: url('#blur');
       filter: blur(8px);
     }
@@ -250,15 +272,6 @@ ul {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-.monolith {
-  transition: all 0.375s ease;
-  transition-delay: 1.75s;
-  width: 634px; height: 151px; background: url(images/mebop.png) no-repeat;
-  margin: 3% auto 0;
-  &.hidden {
-    margin-top: -10%;
-  }
 }
 .audio-player {
   position: absolute;
@@ -791,9 +804,4 @@ ul {
       }
     }
   }
-}
-.logo-icon {
-  width: 221px; height: 267px; background: url(images/logo.png) no-repeat; margin: auto;
-  position: absolute; bottom: 20%; left: 50%; margin-left: -110px; z-index: 1;
-  transition: transform .425s ease-in;
 }

@@ -2,9 +2,31 @@
 @import url("https://fonts.googleapis.com/css?family=Bubbler+One|Bungee+Outline|Josefin+Sans|Julius+Sans+One|Lato|Poiret+One|Raleway");
 .App {
   text-align: center; }
-  .App .container {
+  .App #filters {
+    display: none; }
+  .App .face {
     transition: filter 0.675s;
     filter: blur(0); }
+    .App .face .logo-icon {
+      width: 221px;
+      height: 267px;
+      background: url(images/logo.png) no-repeat;
+      margin: auto;
+      position: absolute;
+      bottom: 20%;
+      left: 50%;
+      margin-left: -110px;
+      z-index: 1;
+      transition: transform .425s ease-in; }
+    .App .face .logo-mono {
+      transition: all 0.375s ease;
+      transition-delay: 1.75s;
+      width: 634px;
+      height: 151px;
+      background: url(images/mebop.png) no-repeat;
+      margin: 3% auto 0; }
+      .App .face .logo-mono.hidden {
+        margin-top: -10%; }
   .App .menu-icon {
     position: fixed;
     right: 35px;
@@ -163,7 +185,13 @@
       width: 20%;
       padding: 20px;
       box-sizing: border-box; }
-  .App.explore .container {
+    .App .navigator .widget .void {
+      margin: 30px auto;
+      display: inline-block;
+      font: 30px Raleway;
+      color: white;
+      text-shadow: 0 1px 2px black; }
+  .App.explore .face {
     filter: url("#blur");
     filter: blur(8px); }
   .App.explore .menu-icon {
@@ -228,16 +256,6 @@ ul {
   list-style: none;
   margin: 0;
   padding: 0; }
-
-.monolith {
-  transition: all 0.375s ease;
-  transition-delay: 1.75s;
-  width: 634px;
-  height: 151px;
-  background: url(images/mebop.png) no-repeat;
-  margin: 3% auto 0; }
-  .monolith.hidden {
-    margin-top: -10%; }
 
 .audio-player {
   position: absolute; }
@@ -681,15 +699,3 @@ ul {
       right: 100%; }
     .audio-player.major.playing.major {
       top: 38.2%; }
-
-.logo-icon {
-  width: 221px;
-  height: 267px;
-  background: url(images/logo.png) no-repeat;
-  margin: auto;
-  position: absolute;
-  bottom: 20%;
-  left: 50%;
-  margin-left: -110px;
-  z-index: 1;
-  transition: transform .425s ease-in; }
