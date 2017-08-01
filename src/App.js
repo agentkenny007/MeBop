@@ -6,11 +6,9 @@ import Backbone from './modules/backbone';
 import Navigator from './components/Navigator';
 import { Filters } from './components/misc';
 
-let bone = new Backbone(); // the backbone runs the app
-
 class App extends Component {
   componentDidMount() { // the app is mounted, DOM nodes are ready
-    bone.boot(); // boot the backbone
+    Backbone.boot(); // boot the backbone
   }
 
   render() { // render the app's view
