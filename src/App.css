@@ -94,6 +94,14 @@
       box-shadow: inset -10px 0 20px rgba(84, 0, 0, 0.125);
       border-right: 1px solid rgba(80, 0, 0, 0.25);
       border-top-right-radius: 15px; }
+      .App .navigator .lunette .content {
+        position: absolute;
+        left: 0;
+        right: 1px;
+        top: 1px;
+        bottom: 2px;
+        overflow-y: scroll;
+        padding: 20px 20px 50px; }
       .App .navigator .lunette:after {
         content: '';
         position: absolute;
@@ -121,36 +129,40 @@
         background: -webkit-linear-gradient(top, #540000 0%, rgba(84, 0, 0, 0) 100%);
         background: linear-gradient(to bottom, #540000 0%, rgba(84, 0, 0, 0) 100%);
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#540000', endColorstr='#00540000',GradientType=0 ); }
-    .App .navigator .widget {
-      position: fixed; }
-      .App .navigator .widget.search {
-        left: 350px;
-        top: 80px;
-        right: 120px; }
-        .App .navigator .widget.search .search-field {
-          border-radius: 4px 0 0 4px; }
-        .App .navigator .widget.search .artist-field {
-          border-radius: 0 4px 4px 0; }
-        .App .navigator .widget.search input {
-          font-size: 2em;
-          text-align: center;
-          border: 1px solid rgba(0, 0, 0, 0.45);
-          padding-bottom: 4px;
-          box-sizing: border-box;
-          font-family: Raleway;
-          width: 5%;
-          outline: 0;
-          box-shadow: 0 6px 7px -1px rgba(20, 0, 0, 0.67);
-          transition: all 0.5s ease, width 3.45s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-          background: rgba(255, 255, 255, 0.85); }
-          .App .navigator .widget.search input:hover {
-            background: rgba(255, 255, 255, 0.95); }
-          .App .navigator .widget.search input:focus {
-            color: white;
-            background: rgba(0, 0, 0, 0.85);
-            border-color: rgba(255, 255, 255, 0.645); }
-          .App .navigator .widget.search input:focus:hover {
-            background: rgba(0, 0, 0, 0.95); }
+    .App .navigator .widget.search {
+      position: fixed;
+      left: 350px;
+      top: 80px;
+      right: 120px; }
+      .App .navigator .widget.search .search-field {
+        border-radius: 4px 0 0 4px; }
+      .App .navigator .widget.search .artist-field {
+        border-radius: 0 4px 4px 0; }
+      .App .navigator .widget.search input {
+        font-size: 2em;
+        text-align: center;
+        border: 1px solid rgba(0, 0, 0, 0.45);
+        padding-bottom: 4px;
+        box-sizing: border-box;
+        font-family: Raleway;
+        width: 5%;
+        outline: 0;
+        box-shadow: 0 6px 7px -1px rgba(20, 0, 0, 0.67);
+        transition: all 0.5s ease, width 3.45s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        background: rgba(255, 255, 255, 0.85); }
+        .App .navigator .widget.search input:hover {
+          background: rgba(255, 255, 255, 0.95); }
+        .App .navigator .widget.search input:focus {
+          color: white;
+          background: rgba(0, 0, 0, 0.85);
+          border-color: rgba(255, 255, 255, 0.645); }
+        .App .navigator .widget.search input:focus:hover {
+          background: rgba(0, 0, 0, 0.95); }
+    .App .navigator .widget .song-list li {
+      display: inline-block;
+      width: 20%;
+      padding: 20px;
+      box-sizing: border-box; }
   .App.explore .container {
     filter: url("#blur");
     filter: blur(8px); }
@@ -211,6 +223,11 @@ html, body {
 
 body {
   background: url(images/background.png) center/cover no-repeat; }
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0; }
 
 .monolith {
   transition: all 0.375s ease;
@@ -415,7 +432,8 @@ body {
       left: 10px;
       right: 10px;
       border: none;
-      background: rgba(255, 255, 255, 0.95); }
+      background: rgba(255, 255, 255, 0.95);
+      z-index: 1; }
       .audio-player.minor:hover .control a {
         border-left-color: #A83418; }
       .audio-player.minor:hover .control:before, .audio-player.minor:hover .control:after {

@@ -101,6 +101,15 @@
       box-shadow: inset -10px 0 20px rgba(84, 0, 0, 0.125);
       border-right: 1px solid rgba(80, 0, 0, 0.25);
       border-top-right-radius: 15px;
+      .content {
+        position: absolute;
+        left: 0;
+        right: 1px; 
+        top: 1px;
+        bottom: 2px;
+        overflow-y: scroll;
+        padding: 20px 20px 50px
+      }
       &:after {
         content: '';
         position: absolute;
@@ -132,8 +141,8 @@
       }
     }
     .widget {
-      position: fixed;
       &.search {
+        position: fixed;
         left: 350px;
         top: 80px;
         right: 120px;
@@ -154,6 +163,14 @@
           &:hover { background: rgba(255, 255, 255, 0.95); }
           &:focus { color: white; background: rgba(0, 0, 0, 0.85); border-color: rgba(255, 255, 255, 0.645); }
           &:focus:hover { background: rgba(0, 0, 0, 0.95); }
+        }
+      }
+      .song-list {
+        li {
+            display: inline-block;
+            width: 20%;
+            padding: 20px;
+            box-sizing: border-box;
         }
       }
     }
@@ -228,6 +245,11 @@ html, body {
 }
 body {
   background: url(images/background.png) center/cover no-repeat;
+}
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 .monolith {
   transition: all 0.375s ease;
@@ -458,6 +480,7 @@ body {
       right: 10px;
       border: none;
       background: rgba(255, 255, 255, 0.95);
+      z-index: 1;
       .control {
         a { border-left-color: #A83418; }
         &:before, &:after { color: #A83418; }
