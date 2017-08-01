@@ -4,9 +4,9 @@ import './App.css';
 import Backbone from './modules/backbone';
 import Face from './components/Face';
 import Navigator from './components/Navigator';
-import { Filters } from './components/misc';
+import Filters from './components/misc';
 
-class App extends Component {
+export default class App extends Component {
   componentDidMount() { // the app is mounted, DOM nodes are ready
     Backbone.boot(); // boot the backbone
   }
@@ -21,5 +21,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;
