@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import AudioPlayer from './AudioPlayer';
 
 export class Filters extends Component {
   render() {
