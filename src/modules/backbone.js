@@ -24,20 +24,20 @@ class Backbone { // the Backbone class (spine of the app)
       .on('click', '.audio-player .prev', player.recur) // when the prev button is clicked, skip backward
       .on('click', '.audio-player .volume .icon', player.mute) // when the volume icon is clicked, toggle mute
       .on('click', '.menu-icon', ()=>{ $('.App').toggleClass('explore') }) // when the menu icon is clicked, open the navigator
+      .on('keydown', player.detectKey) // when a keystroke is started
+      .on('keyup', player.collectKey) // when a keystroke is fired
+      .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', player.scroll) // when progress circle is scrolled, start scrolling
+      .on('submit', 'form', () => { return false; }) // do not refresh page on form submit
+      .on(touch ? 'touchend' : 'mouseleave', '.audio-player .prev, .audio-player .next', player.continue) // stop fast forward/rewind on mobile
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => player.press('forward', 1)) // when the next button is pressed, try fast forwarding in 1% increments
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => player.press('backward', 1)) // when the prev button is pressed, try rewinding in 1% decrements
-      .on(touch ? 'touchstart' : 'mousedown', '.tracker:not(.read-only) canvas', player.track) // when the progress circle is pressed, start tracking
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .scrubber > div', e => player.adjustVolume(e, 'start')) // when the volume scrubber is clicked, adjust volume
       .on(touch ? 'touchmove' : 'mousemove', '.audio-player .scrubber', e => player.adjustVolume(e, 'move')) // when the volume scrubber is dragged, adjust volume
       .on(touch ? 'touchend touchcancel' : 'mouseup mouseleave', '.audio-player .scrubber', e => player.adjustVolume(e, 'end')) // when the volume scrubber is released, stop adjusting volume
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .progress-bar', e => player.adjustTime(e, 'start')) // when the volume scrubber is clicked, adjust volume
       .on(touch ? 'touchmove' : 'mousemove', '.audio-player.minor', e => player.adjustTime(e, 'move')) // when the volume scrubber is dragged, adjust volume
       .on(touch ? 'touchend touchcancel' : 'mouseup mouseleave', '.audio-player.minor', e => player.adjustTime(e, 'end')) // when the volume scrubber is released, stop adjusting volume
-      .on(touch ? 'touchend' : 'mouseleave', '.audio-player .prev, .audio-player .next', player.continue) // stop fast forward/rewind on mobile
-      .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', player.scroll) // when progress circle is scrolled, start scrolling
-      .on('keydown', player.detectKey) // when a keystroke is started
-      .on('keyup', player.collectKey) // when a keystroke is fired
-      .on('submit', 'form', () => { return false; }) // do not refresh page on form submit
+      .on(touch ? 'touchstart' : 'mousedown', '.tracker:not(.read-only) canvas', player.track) // when the progress circle is pressed, start tracking
       .ready(init); // when the document is ready, init
     
     $(window).resize(() => { // when the window is resized
@@ -141,7 +141,7 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
 
   this.getSongs = () => // to get songs and populate the song list
     findSongs().then(songs => { // retrieve songs using soundcloud api
-      let songList = this.songList = List(songs); // map songs to songList array
+      let songList = this.songList = List(songs); console.log(songList) // map songs to songList array
       bone.getRef('song-widget').place(<SongList songs={songList} />); // update the song widget with a list of song cards
       if ($audio_player.hasClass('error')){ // did the player break? (flag is set)
         $audio_player.removeClass('error'); this.play(); // remove error flag and play song
