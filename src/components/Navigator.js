@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AudioPlayer from './AudioPlayer';
 import Backbone from '../modules/backbone';
+import spacer from '../images/space.png';
 
 export default class Navigator extends Component { // menu navigator
   render() {
@@ -64,7 +65,7 @@ class SongCard extends Component {
     return (
       <li>
           <div className="song-card">
-              <div><img src={song.artwork} alt={song.title} /><span className="play" data-stream={song.stream} /></div>
+              <div><img className="spacer" src={spacer} /><img className="art" src={song.artwork} alt={song.title} /><span className="play" data-stream={song.stream} /></div>
               <span className="title" title={song.title}>{song.title}</span>
               <span className="duration">{song.duration}</span>
           </div>
