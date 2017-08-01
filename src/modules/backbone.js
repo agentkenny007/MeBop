@@ -191,7 +191,7 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
   this.pause = () => { // to pause the audio player
     this.lastTrackedValue = $audio_player.find('.tracker:not(.read-only) input').val() // record value of time tracker
     $audio_player.removeClass('playing'); // indicate a paused audio player (remove flag)
-    $('.monolith').removeClass('hidden'); // reveal the big logo
+    $('.logo-mono').removeClass('hidden'); // reveal the big logo
      // shrinking animation for the music icon
     $('.logo-icon').css({ "transform" : "scale(.5)", "z-index" : -1 }).stop(true, false).animate({ "bottom" : "14%", "opacity" : 0.725 }, 400, "linear", function() {
       $(this).css("transform", "scale(1)").animate({ "bottom" : "20%", "opacity" : 1, "z-index" : 1 }, 950) });
@@ -219,7 +219,7 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
         $('.logo-icon').delay(345).animate({ "bottom" : "64.5%" }, 500, function() {
           $(this).animate({ "bottom" : "20%" }, 1250) });
         $audio_player.addClass('playing'); // indicate a playing audio player (set flag)
-        $('.monolith').addClass('hidden'); // hide the big logo
+        $('.logo-mono').addClass('hidden'); // hide the big logo
       }
       audio.play(); // play song
     } else { // no song found
