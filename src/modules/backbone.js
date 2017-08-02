@@ -5,12 +5,25 @@ import findSongs from './soundcloud';
 import './knob';
 import { SongList } from '../components/Navigator';
 
-class Backbone { // the Backbone class (spine of the app)
+class Backbone { // the Backbone class
+  /* |-------------------------------------------------------------------------------------
+  /* |  This is the Backbone. It is not a component, it is the "spine" that runs the app.
+  /* |  The Backbone is in charge of booting the app once it is mounted, and pretty much 
+  /* |  everything else after that. It initialises the audio player as well as registers
+  /* |  live event handlers and settings.
+  /* |
+  /* |  The Backbone is itself initialised before it is exported. This means that The Back-
+  /* |  bone can be use anywhere in the app, within any ES6 module, simply by importing it.
+  /* |  No matter where you call it from, the reference is always to the same Backbone ins-
+  /* |  ance 'bone' (little bone) constructed at the end of this document.
+  /* \-------------------------------------------------------------------------------------
+  *//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**////
+
   constructor() {
     this.refs = []; // to store DOM references
   }
 
-  boot() { // to boot the app (initialise, register live events)
+  boot() { // to boot and run the app
     let player = new AudioPlayer(), // audio player instance
         init = () => { // init function
           player.init(); // initialize audio player
@@ -347,5 +360,6 @@ AudioPlayer.prototype.echoTime = (secs, duration) => { // to get a time string b
   );
 };
 
+// construct and export little bone
 const bone = new Backbone();
 export default bone;
