@@ -7,15 +7,19 @@ import { SongList } from '../components/Navigator';
 
 class Backbone { // the Backbone class
   /* |-------------------------------------------------------------------------------------
-  /* |  This is the Backbone. It is not a component, it is the "spine" that runs the app.
-  /* |  The Backbone is in charge of booting the app once it is mounted, and pretty much 
-  /* |  everything else after that. It initialises the audio player as well as registers
-  /* |  live event handlers and settings.
+  /* | This is the Backbone. It is not a component, it is the "spine" that runs the app.
+  /* | The Backbone is in charge of booting the app once it is mounted, and pretty much 
+  /* | everything else after that. It initialises the audio player as well as registers
+  /* | live event handlers and settings.
   /* |
-  /* |  The Backbone is itself initialised before it is exported. This means that The Back-
-  /* |  bone can be use anywhere in the app, within any ES6 module, simply by importing it.
-  /* |  No matter where you call it from, the reference is always to the same Backbone ins-
-  /* |  ance 'bone' (little bone) constructed at the end of this document.
+  /* | The Backbone is itself initialised before it is exported. This means that The Back-
+  /* | bone can be use anywhere in the app, within any ES6 module, simply by importing it.
+  /* | No matter where you call it from, the reference is always to the same Backbone ins-
+  /* | ance 'bone' (little bone) constructed at the end of this module.
+  /* |
+  /* | Little bone can even be called from within this module to control things like apply-
+  /* | ing settings and DOM insertion. That's because any reference saved to the Backbone
+  /* | gets attached to little bone. Essentially, little bone runs the app.
   /* \-------------------------------------------------------------------------------------
   *//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**////
 
