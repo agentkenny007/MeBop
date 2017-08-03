@@ -127,16 +127,17 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
   };
 
   this.collectKey = e => { // to detect keyboard shortcuts (key fired)
-    switch (e.which) { // what key?
-      case 32: // the spacebar (play/pause song)
-        $audio_player.hasClass('playing') ? this.pause() : this.play();
-        break;
-      case 37: this.recur(); // left arrow (previous song)
-        break;
-      case 39: this.skip(); // right arrow (next song)
-        break;
-      default: break;
-    }
+    if (!/input|textarea/i.test(e.target.tagName)) // ensure keystroke was not fired from an input field or textarea
+      switch (e.which) { // what key?
+        case 32: // the spacebar (play/pause song)
+          $audio_player.hasClass('playing') ? this.pause() : this.play();
+          break;
+        case 37: this.recur(); // left arrow (previous song)
+          break;
+        case 39: this.skip(); // right arrow (next song)
+          break;
+        default: break;
+      }
   };
 
   this.continue = () => { // to end fast forward/rewind
@@ -145,15 +146,16 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
   };
 
   this.detectKey = e => { // to detect keyboard shortcuts (key press started)
-    switch (e.which) { // which key was pressed?
-      case 37: // left arrow (try rewind)
-        if (!$tracker.hasClass('backward')) this.press('backward', 1); // if not rewinding (no flag is set), try rewinding in 1% decrements
-        break;
-      case 39: // right arrow (try fast forward)
-        if (!$tracker.hasClass('forward')) this.press('forward', 1); // if not fast forwarding (no flag is set), try fast forwarding in 1% increments
-        break;
-      default: break;
-    }
+    if (!/input|textarea/i.test(e.target.tagName)) // ensure keystroke was not fired from an input field or textarea
+      switch (e.which) { // which key was pressed?
+        case 37: // left arrow (try rewind)
+          if (!$tracker.hasClass('backward')) this.press('backward', 1); // if not rewinding (no flag is set), try rewinding in 1% decrements
+          break;
+        case 39: // right arrow (try fast forward)
+          if (!$tracker.hasClass('forward')) this.press('forward', 1); // if not fast forwarding (no flag is set), try fast forwarding in 1% increments
+          break;
+        default: break;
+      }
   };
 
   this.getSongs = () => // to get songs and populate the song list
