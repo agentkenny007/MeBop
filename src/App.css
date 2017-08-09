@@ -133,6 +133,7 @@
         width: 100%;
         filter: blur(1px);
         height: 75px;
+        z-index: 1;
         border-radius: 0 0 2px 2px;
         background: -moz-linear-gradient(top, rgba(84, 0, 0, 0) 0%, #540000 100%);
         background: -webkit-linear-gradient(top, rgba(84, 0, 0, 0) 0%, #540000 100%);
@@ -202,13 +203,73 @@
           border-radius: 4px;
           border: 1px solid #500000;
           box-shadow: 0 0 0; }
-          .App .navigator .widget .song-list li .song-card .art:hover {
-            transform: scale(2.5);
-            filter: blur(1px) brightness(0.25) drop-shadow(0 15px 20px rgba(50, 0, 0, 0.97));
-            z-index: 1;
-            border-radius: 0;
-            border: 0;
-            box-shadow: 0 3px 8px #200000; }
+        .App .navigator .widget .song-list li .song-card .play-spinner {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate3d(-50%, -50%, 0);
+          margin-top: 3px;
+          transition: transform 1s cubic-bezier(0.68, -0.75, 0.265, 1.75); }
+          .App .navigator .widget .song-list li .song-card .play-spinner .circle {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0);
+            transition: stroke 1s cubic-bezier(0.86, 0, 0.07, 1); }
+            .App .navigator .widget .song-list li .song-card .play-spinner .circle.fill {
+              stroke-dasharray: 35 270;
+              stroke-width: 7px;
+              stroke-opacity: .35;
+              stroke-dashoffset: 0;
+              transform: rotate(0deg);
+              transform-origin: 54px;
+              transition: stroke 3s ease,stroke-width 1s,stroke-dashoffset 3s,stroke-dasharray 1.5s,stroke-opacity 2s,transform 5s; }
+          .App .navigator .widget .song-list li .song-card .play-spinner .control {
+            width: 108px;
+            height: 108px;
+            display: inline-block;
+            cursor: pointer; }
+            .App .navigator .widget .song-list li .song-card .play-spinner .control:hover .play-arrow {
+              transform: rotate(360deg) scale(2);
+              stroke-width: 0; }
+            .App .navigator .widget .song-list li .song-card .play-spinner .control:hover .fill {
+              stroke-dasharray: 301;
+              stroke-width: 2px;
+              stroke-opacity: 1;
+              stroke-dashoffset: -602;
+              transform: rotate(395deg); }
+            .App .navigator .widget .song-list li .song-card .play-spinner .control:hover:active .play-arrow {
+              fill: rgba(255, 255, 255, 0.7);
+              transform: rotate(382deg) scale(2);
+              transition: transform 0.425s ease-out; }
+            .App .navigator .widget .song-list li .song-card .play-spinner .control:hover:active .fill {
+              stroke: rgba(255, 255, 255, 0.17);
+              transition: stroke 0.235s ease-out,stroke-width 1s,stroke-dashoffset 3s,stroke-dasharray 1.5s,stroke-opacity 2s,transform 5s; }
+          .App .navigator .widget .song-list li .song-card .play-spinner .play-arrow {
+            transition: fill 0.45s, stroke-width 1.5s ease, transform 0.75s ease-out;
+            transform: rotate(0deg) scale(1);
+            transform-origin: 54px;
+            stroke-width: 1px;
+            stroke: rgba(0, 0, 0, 0.615); }
+        .App .navigator .widget .song-list li .song-card:hover .art {
+          transform: scale(2.5);
+          filter: blur(1px) brightness(0.25) drop-shadow(0 15px 20px rgba(50, 0, 0, 0.97));
+          z-index: 1;
+          border-radius: 0;
+          border: 0;
+          box-shadow: 0 3px 8px #200000; }
+        .App .navigator .widget .song-list li .song-card:hover .play-spinner {
+          z-index: 1; }
+          .App .navigator .widget .song-list li .song-card:hover .play-spinner .circle {
+            stroke: #fff; }
+            .App .navigator .widget .song-list li .song-card:hover .play-spinner .circle:not(.fill) {
+              transition: stroke 3s cubic-bezier(0.86, 0, 0.07, 1); }
+      .App .navigator .widget .song-list li:nth-child(5n) .song-card:hover .art {
+        transform: scale(2.5) translateX(-30%); }
+      .App .navigator .widget .song-list li:nth-child(5n) .song-card:hover .play-spinner {
+        transform: translate3d(-120%, -50%, 0); }
+      .App .navigator .widget .song-list li:nth-child(5n - 4) .song-card:hover .art {
+        transform: scale(2.5) translateX(30%); }
+      .App .navigator .widget .song-list li:nth-child(5n - 4) .song-card:hover .play-spinner {
+        transform: translate3d(20%, -50%, 0); }
     .App .navigator .widget .void {
       margin: 30px auto;
       display: inline-block;

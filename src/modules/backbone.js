@@ -41,6 +41,7 @@ class Backbone { // the Backbone class
       .on('click', '.audio-player .prev', player.recur) // when the prev button is clicked, skip backward
       .on('click', '.audio-player .volume .icon', player.mute) // when the volume icon is clicked, toggle mute
       .on('click', '.menu-icon', ()=>{ $('.App').toggleClass('explore') }) // when the menu icon is clicked, open the navigator
+      .on('click', '.play-spinner .control', function(){ player.play(player.songList[this.dataset.stream]); }) // when the song card play spinner is clicked, play the song
       .on('keydown', player.detectKey) // when a keystroke is started
       .on('keyup', player.collectKey) // when a keystroke is fired
       .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', player.scroll) // when progress circle is scrolled, start scrolling
