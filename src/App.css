@@ -790,6 +790,10 @@ ul {
   color: #fff;
   text-shadow: none; }
 
+input::selection {
+  background: #fff;
+  color: black; }
+
 ::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 5px; }
