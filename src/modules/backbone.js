@@ -45,7 +45,7 @@ class Backbone { // the Backbone class
       .on('keydown', player.detectKey) // when a keystroke is started
       .on('keyup', player.collectKey) // when a keystroke is fired
       .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', player.scroll) // when progress circle is scrolled, start scrolling
-      // .on('submit', 'form', () => { return false; }) // do not refresh page on form submit
+      .on('submit', 'form', () => { return false; }) // do not refresh page on form submit
       .on('submit', '.simple.search-form', function(){ // when the simple search form is submitted, try searching for songs
         let $audio_player = $('.audio-player'), // the audio player
             form = $(this), // the simple search form
