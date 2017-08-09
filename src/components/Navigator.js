@@ -55,6 +55,7 @@ class SearchForm extends Component {
   render() {
     let defaults = [<input key={0} className="search-field" placeholder="search for song..."></input>],
         fields = this.props.fields,
+        submit = <input type="submit" style={{display: "none"}} />,
         type = this.props.type;
 
     if (fields && fields.length) fields = fields.map((field, i) => <input key={i} className={`${field}-field filter`}  placeholder={`add ${field}...`}></input>)
@@ -70,6 +71,7 @@ class SearchForm extends Component {
       <form className={`${type?type+' ':''}search-form`}>
         { defaults }
         { fields }
+        { submit }
       </form>
     );
   }
