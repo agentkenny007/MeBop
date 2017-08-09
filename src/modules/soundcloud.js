@@ -8,7 +8,8 @@ export default function retrieve(query){
         url: base_url + 'tracks',
         data: {
             q: query,
-            client_id: ID
+            client_id: ID,
+            limit: 51
         }
     });
 };
