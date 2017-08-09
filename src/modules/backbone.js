@@ -45,7 +45,22 @@ class Backbone { // the Backbone class
       .on('keydown', player.detectKey) // when a keystroke is started
       .on('keyup', player.collectKey) // when a keystroke is fired
       .on('mousewheel DOMMouseScroll', '.tracker:not(.read-only) canvas', player.scroll) // when progress circle is scrolled, start scrolling
-      .on('submit', 'form', () => { return false; }) // do not refresh page on form submit
+      // .on('submit', 'form', () => { return false; }) // do not refresh page on form submit
+      .on('submit', '.simple.search-form', function(){ // when the simple search form is submitted, try searching for songs
+        let $audio_player = $('.audio-player'), // the audio player
+            form = $(this), // the simple search form
+            song = form.find('.search-field').val(), // song title to search for
+            artist = form.find('.artist-field').val(), // artist to search for
+            query = song ? artist ? song + ' ' + artist : song : artist ? artist : ''; // construct query with given data
+        if (query)
+          findSongs(query).then(songs => { // retrieve songs using soundcloud api
+            let songList = player.songList = List(songs); console.log(songList) // map songs to songList array
+            bone.getRef('song-widget').place(<SongList songs={songList} />); // update the song widget with a list of song cards
+            if ($audio_player.hasClass('error')) // did the player break? (flag is set)
+              $audio_player.removeClass('error'); // remove error flag
+          }).catch(e => $audio_player.find('.mini.title span').html(`
+            <b>error finding songs${ song ? artist ? ' titled ' + song + ' by ' + artist : ' titled ' + song : artist ? ' by ' + artist : '' }. :(</b>`)); // update view if error loading songs
+      })
       .on(touch ? 'touchend' : 'mouseleave', '.audio-player .prev, .audio-player .next', player.continue) // stop fast forward/rewind on mobile
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .next', () => player.press('forward', 1)) // when the next button is pressed, try fast forwarding in 1% increments
       .on(touch ? 'touchstart' : 'mousedown', '.audio-player .prev', () => player.press('backward', 1)) // when the prev button is pressed, try rewinding in 1% decrements
