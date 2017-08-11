@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Bubbler+One|Bungee+Outline|Josefin+Sans|Julius+Sans+One|Lato|Poiret+One|Raleway');
+@import url('https://fonts.googleapis.com/css?family=Bubbler+One|Bungee+Outline|Josefin+Sans|Julius+Sans+One|Lato|Poiret+One|Raleway|Old+Standard+TT');
 .App {
   text-align: center;
   #filters { display: none; }
@@ -81,11 +81,12 @@
     position: fixed;
     top: 0;
     left: 0;
-      width: 100%;
-      height: 100%;
+    width: 100%;
+    height: 100%;
     visibility: hidden;
     background: transparent;
-    transition: visibility 1s, background 1.85s cubic-bezier(0.86, 0, 0.07, 1), transform 2s;
+    background: url(images/space.png);
+    transition: visibility 1.32s, background 1.85s cubic-bezier(0.86, 0, 0.07, 1), transform 2s;
     transform: scale(1.5);
     .menu {
       background: rgba(0, 0, 0, 0.425);
@@ -186,23 +187,108 @@
         li {
           display: inline-block;
           width: 20%;
-          // padding: 20px;
+          padding: 45px;
           box-sizing: border-box;
           .song-card {
             position: relative;
-            span { display: none; }
+            z-index: 0;
             .spacer { width: 100%; }
             .art {
               position: absolute;
               left: 50%;
               top: 50%;
               margin: -50px;
-              transition: transform 1s cubic-bezier(0.68, -0.75, 0.265, 1.75), box-shadow 1s cubic-bezier(0.68, -0.75, 0.265, 1.75), filter 2s cubic-bezier(0.86, 0, 0.07, 1);
+              transition:
+                border-radius 0.5s ease 0.55s,
+                transform 1s cubic-bezier(0.68, -0.75, 0.265, 1.75),
+                box-shadow 1s cubic-bezier(0.68, -0.75, 0.265, 1.75),
+                filter 2s cubic-bezier(0.86, 0, 0.07, 1);
               transform: scale(1);
               filter: blur(0) brightness(1);
               border-radius: 4px;
               border: 1px solid #500000;
               box-shadow: 0 0 0;
+            }
+            .details {
+              position: absolute;
+              width: 104px;
+              height: 104px;
+              top: 50%;
+              left: 50%;
+              transform: translate3d(-50%,-50%,0);
+              z-index: 1;
+              span {
+                position: absolute;
+                visibility: hidden;
+                color: white;
+                display: block;
+                width: 220%;
+                left: -60%;
+                font: 20px Josefin Sans;
+                text-shadow: 0 1px 2px black;
+                opacity: 0;
+                transition: opacity 0.5s, left 1s cubic-bezier(0.68, -0.75, 0.265, 1.75), top 1s, visibility 0.5s;
+                &.title {
+                  top: 0;
+                }
+                &.duration {
+                  top: 20%;
+                  font-size: 14px;
+                }
+              }
+              button {
+                position: absolute;
+                top: 30%;
+                left: 30%;
+                background: none;
+                border: none;
+                cursor: pointer;
+                outline: 0;
+                padding: 0;
+                font: 24px 'Old Standard TT';
+                color: white;
+                opacity: 0;
+                border: 1.475px solid transparent;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                &.add {
+                  transition: 
+                    border-color 1.7s cubic-bezier(0.86, 0, 0.07, 1) -0.275s,
+                    left 0.7s cubic-bezier(0.86, 0, 0.07, 1),
+                    top 1s cubic-bezier(0.95, 0.05, 0.795, 0.035),
+                    opacity 1s cubic-bezier(0.95, 0.05, 0.795, 0.035),
+                    transform 0.75s cubic-bezier(0.23, 1, 0.320, 1);
+                  &:before { content: "+"; }
+                  &:hover {
+                    border-color: white;
+                    transform: rotateZ(90deg);
+                  }
+                }
+                &.ellipsis {
+                  transition: 
+                    border-color 1.7s cubic-bezier(0.86, 0, 0.07, 1) -0.275s,
+                    left 1s cubic-bezier(0.95, 0.05, 0.795, 0.035),
+                    top 0.7s cubic-bezier(0.86, 0, 0.07, 1),
+                    opacity 1s cubic-bezier(0.95, 0.05, 0.795, 0.035);
+                  &:before {
+                    content: '...';
+                    position: relative;
+                    top: 0;
+                    transition: top 0.75s cubic-bezier(0.23, 1, 0.320, 1);                    
+                  }
+                  &:hover {
+                    border-color: white;
+                    &:before {
+                      top: -4px;
+                    }
+                  }
+                }
+                &:active {
+                  opacity: 0.37;
+                  transition: border-color 1.7s cubic-bezier(0.86, 0, 0.07, 1), opacity 0.125s ease;
+                }
+              }
             }
             .play-spinner {
               position: absolute;
@@ -239,7 +325,7 @@
                     stroke-dasharray: 301;
                     stroke-width: 2px;
                     stroke-opacity: 1;
-                    stroke-dashoffset: -602;
+                    stroke-dashoffset: -601.95;
                     transform: rotate(395deg);
                   }
                   &:active {
@@ -264,11 +350,35 @@
               }
             }
             &:hover {
+              z-index: 1;
+              span {
+                visibility: visible;
+                opacity: 1;
+                transition: left 1s cubic-bezier(0.68, -0.75, 0.265, 1.75) 0s, opacity 1s 0.5s, top 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s, visibility 1s 0.5s;
+                &.title { top: -62px; }
+                &.duration {
+                  top: 136px;
+                  cursor: default;
+                  user-select: none;                  
+                }
+              }
+              button {
+                opacity: 1;
+                &.add {
+                  left: -60px;
+                  top: 124px;
+                }
+                &.ellipsis {
+                  left: 123px;
+                  top: 124px;
+                }
+              }
               .art {
                 transform: scale(2.5);
                 filter: blur(1px) brightness(0.25) drop-shadow(0 15px 20px rgba(50, 0, 0, 0.97));
                 z-index: 1;
                 border-radius: 0;
+                border: 15px solid white;
                 border: 0;
                 box-shadow: 0 3px 8px #200000;
               }
@@ -283,6 +393,11 @@
           }
           &:nth-child(5n) {
             .song-card:hover {
+              span { left: -128.5%; }
+              button {
+                &.add { left: -135px; }
+                &.ellipsis { left: 48px; }
+              }
               .art {
                 transform: scale(2.5) translateX(-30%);
               }
@@ -293,6 +408,11 @@
           }
           &:nth-child(5n - 4) {
             .song-card:hover {
+              span { left: 8.5%; }
+              button {
+                &.add { left: 15px; }
+                &.ellipsis { left: 198px; }
+              }
               .art {
                 transform: scale(2.5) translateX(30%);
               }
@@ -361,6 +481,7 @@
     }
     .navigator {
       background: rgba(120, 0, 0, 0.7);
+      background: url(images/navbg.png);
       z-index: 2;
       visibility: visible;
       transform: scale(1);
@@ -491,6 +612,15 @@ ul {
       font-family: Raleway;
       position: relative;
       top: 36px;
+      color: white;
+      font-family: Raleway;
+      position: absolute;
+      left: 188px;
+      right: 111px;
+      top: 36px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .volume {
       right: 0;
@@ -521,6 +651,7 @@ ul {
           height: 90%;
           background: rgba(255, 255, 255, 0.435);
           border-radius: 5px;
+          cursor: pointer;
           div {
             position: absolute;
             bottom: 0;
@@ -922,7 +1053,7 @@ ul {
 }
 ::selection {
 	background: #604545;
-	color: #fff;
+	color: #FFEA80;
 	text-shadow: none;
 }
 input::selection {
