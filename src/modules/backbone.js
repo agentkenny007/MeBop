@@ -236,14 +236,17 @@ AudioPlayer = function() { // sets up the audio player (constructor function)
 
   this.play = song => { // to play the audio player
     let songFound = !!( // return a boolean as to whether or not there is a song to play
-      song = song && song.stream ? song // if 'song' is defined, use the given song if it has a stream link
+      song = song && song.origin ? song // if 'song' is defined, use the given song if it has an origin
       : this.songList.length ? // otherwise, are there songs in the song list?
         this.songList[this.nowPlaying] // if so, use the currently playing song
         : 0); // otherwise, use '0' (no song found)
 
     if (songFound){ // ensure there is a song to be played (streamed)
-      if (!audio.src.includes(song.stream)) // if current song does not match the song to play
-        audio.src = `${song.stream}?client_id=${ID}`; // set the song to play
+      // verify whether the currently playing song matches the stream link of the song to play
+      if (song.stream && (!audio.src.includes(song.stream))) // if they don't line up (based on stream url)
+        audio.src = song.stream; // set the song to play
+      else if (song.stream_sc && (!audio.src.includes(song.stream_sc))) // if they don't line up (based on soundcloud stream url)
+        audio.src = `${song.stream_sc}?client_id=${ID}`; // set the song to play (include soundcloud client ID)
       $audio_player.find('.title span').attr("title", song.title).text(song.title); // update view of song title
       if ($audio_player.hasClass('playing')){ // if audio player is playing (flag is set)
          // bouncing animation for the music icon
@@ -349,8 +352,8 @@ List = songs => { // sets up the song list using data from soundcloud api
       artwork: song.artwork_url || song.user.avatar_url,
       genre: song.genre,
       format: song.original_format,
-      stream: song.stream_url,
-      link: song.permalink_url
+      stream_sc: song.stream_url,
+      origin: song.permalink_url
     };
   });
 };
