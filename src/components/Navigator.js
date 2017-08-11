@@ -84,14 +84,16 @@ class SongCard extends Component {
 
     return (
       <li>
-          <div className="song-card">
-              <div>
-                <img className="spacer" alt="" src={spacer} />
-                <img className="art" src={song.artwork} alt={song.title} />
-                <PlaySpinner song={i} />
+          <div className="song-card" data-index={i}>
+              <img className="spacer" alt="" src={spacer} />
+              <img className="art" src={song.artwork} alt={song.title} />
+              <div className="details">
+                <span className="title" title={song.title}>{song.title}</span>
+                <span className="duration">{song.duration}</span>
+                <button className="add"></button>
+                <button className="ellipsis"></button>
               </div>
-              <span className="title" title={song.title}>{song.title}</span>
-              <span className="duration">{song.duration}</span>
+              <PlaySpinner song={i} />              
           </div>
       </li>
     );
